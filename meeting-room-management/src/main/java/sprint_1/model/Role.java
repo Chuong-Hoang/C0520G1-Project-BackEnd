@@ -1,0 +1,45 @@
+package sprint_1.model;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import javax.persistence.*;
+import java.util.Collection;
+
+@Entity
+public class Role {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idRole;
+
+    private String roleName;
+
+    @JsonBackReference
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
+    private Collection<User> userCollection;
+
+    //Ai muốn tạo constructor có đối số thì nhớ tạo thêm constructor không đối số nhé!!!
+
+    public Long getIdRole() {
+        return idRole;
+    }
+
+    public void setIdRole(Long idRole) {
+        this.idRole = idRole;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public Collection<User> getUsers() {
+        return userCollection;
+    }
+
+    public void setUsers(Collection<User> userCollection) {
+        this.userCollection = userCollection;
+    }
+}
