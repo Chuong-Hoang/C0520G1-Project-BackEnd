@@ -1,7 +1,5 @@
 package sprint_1.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import javax.persistence.*;
 import java.util.Collection;
 
@@ -25,7 +23,6 @@ public class Asset {
 
     private String price;
 
-    @JsonBackReference
     @OneToMany(mappedBy = "asset", cascade = CascadeType.ALL)
     private Collection<AssetDetail> assetDetailCollection;
 
