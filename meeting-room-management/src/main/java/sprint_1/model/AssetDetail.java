@@ -1,9 +1,10 @@
 package sprint_1.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 
 @Entity
-@Table
 public class AssetDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -13,10 +14,12 @@ public class AssetDetail {
 
     @ManyToOne
     @JoinColumn(name = "idMeetingRoom")
-    private MeetingRoom meetingRoom;
+    @JsonBackReference
+    private MeetingRoom meetingRoomAsset;
 
     @ManyToOne
     @JoinColumn(name = "idAsset")
+    @JsonBackReference
     private Asset asset;
 
     //Ai muốn tạo constructor có đối số thì nhớ tạo thêm constructor không đối số nhé!!!
@@ -45,11 +48,11 @@ public class AssetDetail {
         this.asset = asset;
     }
 
-    public MeetingRoom getMeetingRoom() {
-        return meetingRoom;
+    public MeetingRoom getMeetingRoomAsset() {
+        return meetingRoomAsset;
     }
 
-    public void setMeetingRoom(MeetingRoom meetingRoom) {
-        this.meetingRoom = meetingRoom;
+    public void setMeetingRoomAsset(MeetingRoom meetingRoomAsset) {
+        this.meetingRoomAsset = meetingRoomAsset;
     }
 }

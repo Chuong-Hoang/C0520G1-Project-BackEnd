@@ -17,4 +17,19 @@ public class ErrorTypeServiceImpl implements ErrorTypeService {
     public List<ErrorType> findAll() {
         return errorTypeRepository.findAll();
     }
+
+    @Override
+    public void save(ErrorType errorType) {
+        errorTypeRepository.save(errorType);
+    }
+
+    @Override
+    public ErrorType findById(Long id) {
+        return errorTypeRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public void remove(Long id) {
+        errorTypeRepository.deleteById(id);
+    }
 }

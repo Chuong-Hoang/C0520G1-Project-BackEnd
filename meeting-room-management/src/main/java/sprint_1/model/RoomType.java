@@ -1,7 +1,5 @@
 package sprint_1.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import javax.persistence.*;
 import java.util.Collection;
 
@@ -10,11 +8,11 @@ public class RoomType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idRoomType;
+
     private String RoomTypeName;
 
-    @JsonBackReference
     @OneToMany(mappedBy = "roomType", cascade = CascadeType.ALL)
-    private Collection<MeetingRoom> meetingRoomCollection;
+    private Collection<MeetingRoom> meetingRoomCollection_1;
 
     //Ai muốn tạo constructor có đối số thì nhớ tạo thêm constructor không đối số nhé!!!
 
@@ -34,11 +32,11 @@ public class RoomType {
         RoomTypeName = roomTypeName;
     }
 
-    public Collection<MeetingRoom> getMeetingRoomCollection() {
-        return meetingRoomCollection;
+    public Collection<MeetingRoom> getMeetingRoomCollection_1() {
+        return meetingRoomCollection_1;
     }
 
-    public void setMeetingRoomCollection(Collection<MeetingRoom> meetingRoomCollection) {
-        this.meetingRoomCollection = meetingRoomCollection;
+    public void setMeetingRoomCollection_1(Collection<MeetingRoom> meetingRoomCollection_1) {
+        this.meetingRoomCollection_1 = meetingRoomCollection_1;
     }
 }
