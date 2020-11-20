@@ -1,7 +1,5 @@
 package sprint_1.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import javax.persistence.*;
 import java.util.Collection;
 
@@ -13,7 +11,6 @@ public class ErrorType {
 
     private String errorTypeName;
 
-    @JsonBackReference
     @OneToMany(mappedBy = "errorType", cascade = CascadeType.ALL)
     private Collection<Comment> commentCollection;
 

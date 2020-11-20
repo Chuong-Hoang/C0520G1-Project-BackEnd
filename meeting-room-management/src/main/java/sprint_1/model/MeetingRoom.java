@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.List;
 
 @Entity
 public class MeetingRoom {
@@ -26,24 +25,23 @@ public class MeetingRoom {
 
     private String endDate;
 
-    @JsonBackReference
-    @OneToMany(mappedBy = "meetingRoom", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "meetingRoomAsset", cascade = CascadeType.ALL)
     private Collection<AssetDetail> assetDetailCollection;
 
-    @JsonBackReference
     @OneToMany(mappedBy = "meetingRoom", cascade = CascadeType.ALL)
     private Collection<BookedRoom> bookedRoomCollection;
 
-    @JsonBackReference
     @OneToMany(mappedBy = "meetingRoom", cascade = CascadeType.ALL)
     private Collection<Comment> commentCollection;
 
     @ManyToOne
     @JoinColumn(name = "idRoomType")
+    @JsonBackReference
     private RoomType roomType;
 
     @ManyToOne
     @JoinColumn(name = "idRoomStatus")
+    @JsonBackReference
     private RoomStatus roomStatus;
 
     //Ai muốn tạo constructor có đối số thì nhớ tạo thêm constructor không đối số nhé!!!

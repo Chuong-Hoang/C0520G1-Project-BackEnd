@@ -17,4 +17,19 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     public List<RoomType> findAll() {
         return roomTypeRepository.findAll();
     }
+
+    @Override
+    public void save(RoomType roomType) {
+        roomTypeRepository.save(roomType);
+    }
+
+    @Override
+    public RoomType findById(Long id) {
+        return roomTypeRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public void remove(Long id) {
+        roomTypeRepository.deleteById(id);
+    }
 }

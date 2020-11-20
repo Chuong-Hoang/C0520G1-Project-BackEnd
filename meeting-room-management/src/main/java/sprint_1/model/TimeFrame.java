@@ -1,7 +1,5 @@
 package sprint_1.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import javax.persistence.*;
 import java.util.Collection;
 
@@ -13,13 +11,11 @@ public class TimeFrame {
 
     private String timeValue;
 
-    @JsonBackReference
     @OneToMany(mappedBy = "startTime", cascade = CascadeType.ALL)
     private Collection<BookedRoom> bookedRoomCollection_1;
 
-    @JsonBackReference
     @OneToMany(mappedBy = "endTime", cascade = CascadeType.ALL)
-    private Collection<BookedRoom> getBookedRoomCollection_2;
+    private Collection<BookedRoom> bookedRoomCollection_2;
 
     //Ai muốn tạo constructor có đối số thì nhớ tạo thêm constructor không đối số nhé!!!
 
@@ -47,11 +43,11 @@ public class TimeFrame {
         this.bookedRoomCollection_1 = bookedRoomCollection_1;
     }
 
-    public Collection<BookedRoom> getGetBookedRoomCollection_2() {
-        return getBookedRoomCollection_2;
+    public Collection<BookedRoom> getBookedRoomCollection_2() {
+        return bookedRoomCollection_2;
     }
 
-    public void setGetBookedRoomCollection_2(Collection<BookedRoom> getBookedRoomCollection_2) {
-        this.getBookedRoomCollection_2 = getBookedRoomCollection_2;
+    public void setBookedRoomCollection_2(Collection<BookedRoom> bookedRoomCollection_2) {
+        this.bookedRoomCollection_2 = bookedRoomCollection_2;
     }
 }

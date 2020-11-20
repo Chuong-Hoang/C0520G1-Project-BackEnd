@@ -15,21 +15,18 @@ public class User {
     private String fullName;
     private String department;
 
-    @JsonBackReference
     @OneToMany(mappedBy = "bookedUser", cascade = CascadeType.ALL)
     private Collection<BookedRoom> bookedRoomCollection;
 
-    @JsonBackReference
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
     private Collection<Comment> commentCollection_1;
 
-    @JsonBackReference
     @OneToMany(mappedBy = "replier", cascade = CascadeType.ALL)
     private Collection<Comment> commentCollection_2;
 
-    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "idRole")
+    @JsonBackReference
     private Role role;
 
     //Ai muốn tạo constructor có đối số thì nhớ tạo thêm constructor không đối số nhé!!!

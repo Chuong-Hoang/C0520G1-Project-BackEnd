@@ -1,9 +1,8 @@
 package sprint_1.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Set;
 
 @Entity
 public class Role {
@@ -13,7 +12,6 @@ public class Role {
 
     private String roleName;
 
-    @JsonBackReference
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
     private Collection<User> userCollection;
 
@@ -35,11 +33,11 @@ public class Role {
         this.roleName = roleName;
     }
 
-    public Collection<User> getUsers() {
+    public Collection<User> getUserCollection() {
         return userCollection;
     }
 
-    public void setUsers(Collection<User> userCollection) {
+    public void setUserCollection(Collection<User> userCollection) {
         this.userCollection = userCollection;
     }
 }
