@@ -1,7 +1,5 @@
 package sprint_1.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import javax.persistence.*;
 import java.util.Collection;
 
@@ -14,7 +12,6 @@ public class RoomStatus {
 
     private String roomStatusName;
 
-    @JsonBackReference
     @OneToMany(mappedBy = "roomStatus", cascade = CascadeType.ALL)
     private Collection<MeetingRoom> meetingRoomCollection;
 
@@ -36,11 +33,11 @@ public class RoomStatus {
         this.roomStatusName = roomStatusName;
     }
 
-    public Collection<MeetingRoom> getMeetingRooms() {
+    public Collection<MeetingRoom> getMeetingRoomCollection() {
         return meetingRoomCollection;
     }
 
-    public void setMeetingRooms(Collection<MeetingRoom> meetingRoomCollection) {
+    public void setMeetingRoomCollection(Collection<MeetingRoom> meetingRoomCollection) {
         this.meetingRoomCollection = meetingRoomCollection;
     }
 }

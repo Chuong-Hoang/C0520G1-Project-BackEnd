@@ -17,4 +17,19 @@ public class RoomStatusServiceImpl implements RoomStatusService {
     public List<RoomStatus> findAll() {
         return roomStatusRepository.findAll();
     }
+
+    @Override
+    public void save(RoomStatus roomStatus) {
+        roomStatusRepository.save(roomStatus);
+    }
+
+    @Override
+    public RoomStatus findById(Long id) {
+        return roomStatusRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public void remove(Long id) {
+        roomStatusRepository.deleteById(id);
+    }
 }

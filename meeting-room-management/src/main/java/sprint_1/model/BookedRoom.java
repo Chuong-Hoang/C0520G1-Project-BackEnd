@@ -1,5 +1,7 @@
 package sprint_1.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -20,18 +22,22 @@ public class BookedRoom {
 
     @ManyToOne
     @JoinColumn(name = "startTime")
+    @JsonBackReference
     private TimeFrame startTime;
 
     @ManyToOne
     @JoinColumn(name = "endTime")
+    @JsonBackReference
     private TimeFrame endTime;
 
     @ManyToOne
     @JoinColumn(name = "idUser")
+    @JsonBackReference
     private User bookedUser;
 
     @ManyToOne
     @JoinColumn(name = "idMeetingRoom")
+    @JsonBackReference
     private MeetingRoom meetingRoom;
 
     //Ai muốn tạo constructor có đối số thì nhớ tạo thêm constructor không đối số nhé!!!
