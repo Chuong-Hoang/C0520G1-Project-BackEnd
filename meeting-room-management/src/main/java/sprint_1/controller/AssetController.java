@@ -5,8 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sprint_1.dto.AssetDTO;
 import sprint_1.model.Asset;
-import sprint_1.model.MeetingRoom;
+
 import sprint_1.service.AssetDetailService;
 import sprint_1.service.AssetService;
 import sprint_1.service.MeetingRoomService;
@@ -35,6 +36,7 @@ public class AssetController {
         }
         return new ResponseEntity<>(assets, HttpStatus.OK);
     }
+
     @GetMapping("/detail/{id}")
     public ResponseEntity<Asset> detailAsset(@PathVariable Long id) {
         Asset asset = assetService.findById(id);
@@ -46,7 +48,15 @@ public class AssetController {
     }
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> add(@RequestBody Asset asset){
+    public ResponseEntity<Void> add(@RequestBody AssetDTO assetDTO){
+        Asset asset = new Asset();
+        asset.setAssetName(assetDTO.getAssetName());
+        asset.setUsingQuantity(assetDTO.getUsingQuantity());
+        asset.setFixingQuantity(assetDTO.getFixingQuantity());
+        asset.setTotal(assetDTO.getTotal());
+        asset.setImage(assetDTO.getImage());
+        asset.setDescription(assetDTO.getDescription());
+        asset.setPrice(assetDTO.getPrice());
         assetService.save(asset);
         return new ResponseEntity<>(HttpStatus.OK);
     }
