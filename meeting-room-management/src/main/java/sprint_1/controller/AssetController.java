@@ -46,8 +46,8 @@ public class AssetController {
     }
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> add(@RequestBody MeetingRoom meetingRoom){
-        meetingRoomService.save(meetingRoom);
+    public ResponseEntity<Void> add(@RequestBody Asset asset){
+        assetService.save(asset);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
