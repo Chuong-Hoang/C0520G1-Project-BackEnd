@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sprint_1.dto.AssetDTO;
 import sprint_1.model.Asset;
+import sprint_1.model.AssetDetail;
 import sprint_1.model.MeetingRoom;
 import sprint_1.service.AssetDetailService;
 import sprint_1.service.AssetService;
@@ -34,11 +35,23 @@ public class AssetController {
         if (assets.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+        int total = 0;
+        for (Asset asset: assets) {
+            for (AssetDetail element: asset.getAssetDetailCollection()) {
+                if (element != null) {
+                    total += Integer.parseInt(element.getAssetQuantity());
+                } else {
+                    total = 0;
+                }
+            }
+            asset.setUsingQuantity(String.valueOf(total));
+            total = 0;
+        }
         return new ResponseEntity<>(assets, HttpStatus.OK);
     }
 
     @GetMapping("/detail/{id}")
-    public ResponseEntity<Asset> detailAsset(@PathVariable Long id) {
+    public ResponseEntity<Asset> check(@PathVariable Long id) {
         Asset asset = assetService.findById(id);
         if (asset != null) {
             return new ResponseEntity<>(asset, HttpStatus.OK);
