@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sprint_1.dto.AssetDTO;
 import sprint_1.model.Asset;
-
+import sprint_1.model.AssetDetail;
 import sprint_1.service.AssetDetailService;
 import sprint_1.service.AssetService;
 import sprint_1.service.MeetingRoomService;
@@ -34,6 +34,18 @@ public class AssetController {
         if (assets.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+        int totalUsingQuantity = 0;
+        for (Asset asset : assets) {
+            for (AssetDetail assetDetail : asset.getAssetDetailCollection()) {
+                if (assetDetail != null) {
+                    totalUsingQuantity += Integer.parseInt(assetDetail.getAssetQuantity());
+                } else {
+                    totalUsingQuantity = 0;
+                }
+            }
+            asset.setUsingQuantity(String.valueOf(totalUsingQuantity));
+            totalUsingQuantity = 0;
+        }
         return new ResponseEntity<>(assets, HttpStatus.OK);
     }
 
@@ -48,7 +60,7 @@ public class AssetController {
     }
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> add(@RequestBody AssetDTO assetDTO){
+    public ResponseEntity<Void> add(@RequestBody AssetDTO assetDTO) {
         Asset asset = new Asset();
         asset.setAssetName(assetDTO.getAssetName());
         asset.setUsingQuantity(assetDTO.getUsingQuantity());
@@ -59,5 +71,25 @@ public class AssetController {
         asset.setPrice(assetDTO.getPrice());
         assetService.save(asset);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PatchMapping(value = "/edit/{id}")
+    public ResponseEntity<Asset> updateAsset(@RequestBody AssetDTO assetDTO, @PathVariable Long id) {
+        System.err.println("Updating " + id);
+        Asset asset = assetService.findById(id);
+        if (asset == null) {
+            System.out.println("id " + id + " not found");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        asset.setAssetName(assetDTO.getAssetName());
+        asset.setUsingQuantity(assetDTO.getUsingQuantity());
+        asset.setFixingQuantity(assetDTO.getFixingQuantity());
+        asset.setTotal(assetDTO.getTotal());
+        asset.setImage(assetDTO.getImage());
+        asset.setDescription(assetDTO.getDescription());
+        asset.setPrice(assetDTO.getPrice());
+
+        assetService.save(asset);
+        return new ResponseEntity<>(asset, HttpStatus.OK);
     }
 }
