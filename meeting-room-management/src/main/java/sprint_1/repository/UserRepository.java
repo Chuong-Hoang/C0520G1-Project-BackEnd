@@ -5,4 +5,6 @@ import sprint_1.model.User;
 
 public interface UserRepository extends JpaRepository<User,Long> {
     Boolean existsByUserName(String username);
+  
+    User findUserByUserName(String username);
 }
