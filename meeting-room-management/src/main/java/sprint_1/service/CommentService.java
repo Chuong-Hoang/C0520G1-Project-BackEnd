@@ -13,4 +13,6 @@ public interface CommentService {
     Comment findById(Long id);
 
     void remove(Long id);
+
+    List<Comment> findCommentByRoomName(String name);
 }
