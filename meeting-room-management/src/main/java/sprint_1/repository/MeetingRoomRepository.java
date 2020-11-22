@@ -1,7 +1,18 @@
 package sprint_1.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+
 import sprint_1.model.MeetingRoom;
 
-public interface MeetingRoomRepository extends JpaRepository<MeetingRoom,Long> {
+import java.util.List;
+
+public interface MeetingRoomRepository extends JpaRepository<MeetingRoom, Long> {
+//    List<MeetingRoom> findAllByRoomNameAndCapacityAndFloorAndRoomStatus_RoomStatusNameAndRoomType_RoomTypeNameAndZoneContaining
+//            (String nameRoom, String capacity, String floor, String status, String type, String zone);
+
+    List<MeetingRoom> findAllByRoomNameContainingAndCapacityContainingAndZoneContainingAndFloorContaining
+//    List<MeetingRoom> findAllByRoomNameOrCapacityOrFloorOrZoneContaining
+            (String nameRoom, String capacity, String floor, String zone);
+
+    List<MeetingRoom> findAllByRoomNameContaining(String nameRoom);
 }
