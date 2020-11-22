@@ -16,6 +16,11 @@ public class MeetingRoomServiceImpl implements MeetingRoomService {
     MeetingRoomRepository meetingRoomRepository;
 
     @Override
+    public MeetingRoom findByRoomName(String name) {
+        return meetingRoomRepository.findByRoomName(name);
+    }
+
+    @Override
     public List<MeetingRoom> findAll() {
         return meetingRoomRepository.findAll();
     }

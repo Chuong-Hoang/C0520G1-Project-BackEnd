@@ -6,6 +6,7 @@ import sprint_1.model.MeetingRoom;
 import java.util.List;
 
 public interface MeetingRoomService {
+    MeetingRoom findByRoomName (String name);
 
     List<MeetingRoom> findAll();
 
