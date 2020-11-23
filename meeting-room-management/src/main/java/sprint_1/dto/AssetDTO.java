@@ -19,6 +19,7 @@ public class AssetDTO {
 
     private String price;
 
+
     private List<AssetDetailDTO> assetDetailDTOList;
 
     public AssetDTO() {

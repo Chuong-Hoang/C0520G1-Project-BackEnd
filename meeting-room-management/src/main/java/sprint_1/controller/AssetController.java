@@ -11,7 +11,6 @@ import sprint_1.model.Asset;
 import sprint_1.model.AssetDetail;
 import sprint_1.service.AssetDetailService;
 import sprint_1.service.AssetService;
-import sprint_1.service.MeetingRoomService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +25,6 @@ public class AssetController {
 
     @Autowired
     AssetDetailService assetDetailService;
-
-    @Autowired
-    MeetingRoomService meetingRoomService;
 
     @GetMapping()
     public ResponseEntity<List<Asset>> listAssets() {
@@ -50,6 +46,19 @@ public class AssetController {
         }
         return new ResponseEntity<>(assets, HttpStatus.OK);
     }
+
+
+    @GetMapping("/inputSearch")
+    public ResponseEntity<List<Asset>> searchAssets(@RequestParam("valueSearch") String inputSearch) {
+        List<Asset> assets = assetService.findAllByAssetNameContaining(inputSearch);
+        if (assets.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(assets, HttpStatus.OK);
+    }
+
+
+
 
     @GetMapping("/detail/{id}")
     public ResponseEntity<AssetDTO> check(@PathVariable Long id) {
@@ -104,5 +113,15 @@ public class AssetController {
 
         assetService.save(asset);
         return new ResponseEntity<>(asset, HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/delete/{id}")
+    public ResponseEntity<Asset> deleteAsset(@PathVariable Long id) {
+        Asset asset = assetService.findById(id);
+        if (asset == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        assetService.delete(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
