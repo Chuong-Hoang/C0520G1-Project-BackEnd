@@ -11,6 +11,7 @@ import sprint_1.model.RoomType;
 import sprint_1.service.RoomStatusService;
 import sprint_1.service.RoomTypeService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -20,6 +21,7 @@ public class CommonController {
     private RoomTypeService roomTypeService;
     @Autowired
     private RoomStatusService roomStatusService;
+
     @GetMapping("room-type")
     public ResponseEntity<List<RoomType>> showAllRoomType() {
         List<RoomType> list = roomTypeService.findAll();
@@ -32,9 +34,11 @@ public class CommonController {
     @GetMapping("room-status")
     public ResponseEntity<List<RoomStatus>> showAllRoomStatus() {
         List<RoomStatus> list = roomStatusService.findAll();
+
         if (list.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 }
+
