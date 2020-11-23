@@ -14,4 +14,5 @@ public interface RoomTypeService {
 
     void remove(Long id);
 
+    RoomType findByName(String name);
 }

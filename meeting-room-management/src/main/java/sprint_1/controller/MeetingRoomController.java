@@ -24,10 +24,10 @@ import java.util.List;
 public class MeetingRoomController {
     @Autowired
     private MeetingRoomService meetingRoomService;
-  
+
     @Autowired
     private RoomTypeService roomTypeService;
-  
+
     @Autowired
     private RoomStatusService roomStatusService;
 
@@ -186,8 +186,8 @@ public class MeetingRoomController {
         meetingRoom.setImage(meetingRoomDTO.getImage());
         meetingRoom.setStartDate(meetingRoomDTO.getStartDate());
         meetingRoom.setEndDate(meetingRoomDTO.getEndDate());
-        meetingRoom.setRoomType(roomTypeService.findById(meetingRoomDTO.getRoomTypeId()));
-        meetingRoom.setRoomStatus(roomStatusService.findById(meetingRoomDTO.getRoomStatusId()));
+        meetingRoom.setRoomType(roomTypeService.findByName(meetingRoomDTO.getRoomTypeName()));
+        meetingRoom.setRoomStatus(roomStatusService.findByName(meetingRoomDTO.getRoomStatusName()));
         meetingRoomService.save(meetingRoom);
         return new ResponseEntity<>(HttpStatus.OK);
     }
