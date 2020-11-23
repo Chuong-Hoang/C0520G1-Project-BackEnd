@@ -1,6 +1,7 @@
 package sprint_1.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 
@@ -12,8 +13,10 @@ public class Comment {
 
     private String commentTime;
 
+    @Length(min = 1,message = "Vui lòng không để trống trường này!")
     private String contentReply;
 
+    @Length(min = 1,message = "Vui lòng không để trống trường này!")
     private String contentComment;
 
     private boolean status;

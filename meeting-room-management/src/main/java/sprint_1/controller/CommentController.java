@@ -38,13 +38,14 @@ public class CommentController {
         } else {
             for (Comment commentLists : commentList) {
                 if (commentLists.getReplier() == null) {
-                    commentDTO.add(new CommentDTO(commentLists.getIdComment(), commentLists.getSender().getFullName(), commentLists.getCommentTime(), null, "N/A",
+                    commentDTO.add(new CommentDTO(commentLists.getIdComment(), commentLists.getSender().getFullName(), commentLists.getCommentTime(), "N/A",
                             commentLists.getContentComment(), "N/A", commentLists.getErrorType().getErrorTypeName(),
-                            commentLists.getMeetingRoom().getRoomName(), commentLists.isStatus()));
+                            commentLists.getMeetingRoom().getRoomName(), commentLists.isStatus(),commentLists.isStatusView()));
                 } else {
-                    commentDTO.add(new CommentDTO(commentLists.getIdComment(), commentLists.getSender().getFullName(), commentLists.getCommentTime(), commentLists.getReplier().getIdUser(), commentLists.getContentReply(),
-                            commentLists.getContentComment(), commentLists.getReplier().getFullName(), commentLists.getErrorType().getErrorTypeName(),
-                            commentLists.getMeetingRoom().getRoomName(), commentLists.isStatus()));
+                    commentDTO.add(new CommentDTO(commentLists.getIdComment(), commentLists.getSender().getFullName(),
+                            commentLists.getCommentTime(), commentLists.getContentReply(), commentLists.getContentComment(),
+                            commentLists.getReplier().getFullName(), commentLists.getErrorType().getErrorTypeName(),
+                            commentLists.getMeetingRoom().getRoomName(), commentLists.isStatus(),commentLists.isStatusView()));
 
                 }
             }
@@ -94,13 +95,14 @@ public class CommentController {
         List<CommentDTO> commentList1 = new ArrayList<>();
         for (Comment commentLists : commentList) {
                 if (commentLists.getReplier() == null) {
-                    commentList1.add(new CommentDTO(commentLists.getIdComment(), commentLists.getSender().getFullName(), commentLists.getCommentTime(), null, "N/A",
+                    commentList1.add(new CommentDTO(commentLists.getIdComment(), commentLists.getSender().getFullName(), commentLists.getCommentTime(), "N/A",
                             commentLists.getContentComment(), "N/A", commentLists.getErrorType().getErrorTypeName(),
-                            commentLists.getMeetingRoom().getRoomName(), commentLists.isStatus()));
+                            commentLists.getMeetingRoom().getRoomName(), commentLists.isStatus(),commentLists.isStatusView()));
                 } else {
-                    commentList1.add(new CommentDTO(commentLists.getIdComment(), commentLists.getSender().getFullName(), commentLists.getCommentTime(), commentLists.getReplier().getIdUser(), commentLists.getContentReply(),
-                            commentLists.getContentComment(), commentLists.getReplier().getFullName(), commentLists.getErrorType().getErrorTypeName(),
-                            commentLists.getMeetingRoom().getRoomName(), commentLists.isStatus()));
+                    commentList1.add(new CommentDTO(commentLists.getIdComment(), commentLists.getSender().getFullName(),
+                            commentLists.getCommentTime(), commentLists.getContentReply(),
+                            commentLists.getContentComment(), commentLists.getReplier().getFullName(), commentLists.getErrorType()
+                            .getErrorTypeName(), commentLists.getMeetingRoom().getRoomName(), commentLists.isStatus(),commentLists.isStatusView()));
 
                 }
             }
@@ -112,11 +114,11 @@ public class CommentController {
 
     @GetMapping("/comment/{idComment}")
     public ResponseEntity<CommentDTO> findCommentById(@PathVariable Long idComment) {
-        CommentDTO commentDTO = new CommentDTO();
+        CommentDTO commentDTO;
         Comment comment = commentService.findById(idComment);
-        commentDTO = new CommentDTO(comment.getIdComment(), comment.getSender().getFullName(), comment.getCommentTime(), null, "N/A",
+        commentDTO = new CommentDTO(comment.getIdComment(), comment.getSender().getFullName(), comment.getCommentTime(), "N/A",
                 comment.getContentComment(), "N/A", comment.getErrorType().getErrorTypeName(),
-                comment.getMeetingRoom().getRoomName(), comment.isStatus());
+                comment.getMeetingRoom().getRoomName(), comment.isStatus(),comment.isStatusView());
 
         return new ResponseEntity<>(commentDTO, HttpStatus.OK);
     }
@@ -146,9 +148,9 @@ public class CommentController {
         commentService.save(comment);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    @PutMapping("/comment/detail/{id}")
-    public ResponseEntity<Void> detailCommentHandle(@PathVariable Long id, @RequestBody CommentDTO commentDTO) {
-        Comment comment = commentService.findById(id);
+    @PutMapping("/comment/detail/{idComment}")
+    public ResponseEntity<Void> detailCommentHandle(@PathVariable Long idComment, @RequestBody CommentDTO commentDTO) {
+        Comment comment = commentService.findById(idComment);
         comment.setStatusView(true);
         commentService.save(comment);
         return new ResponseEntity<>(HttpStatus.OK);
