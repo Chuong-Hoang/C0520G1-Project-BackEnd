@@ -18,6 +18,8 @@ public class Comment {
 
     private boolean status;
 
+    private boolean statusView;
+
     @ManyToOne
     @JoinColumn(name = "sender")
     @JsonBackReference
@@ -110,5 +112,13 @@ public class Comment {
 
     public void setMeetingRoom(MeetingRoom meetingRoom) {
         this.meetingRoom = meetingRoom;
+    }
+
+    public boolean isStatusView() {
+        return statusView;
+    }
+
+    public void setStatusView(boolean statusView) {
+        this.statusView = statusView;
     }
 }

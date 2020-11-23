@@ -13,6 +13,7 @@ public class CommentDTO {
     private String errorTypeName;
     private String roomName;
     private boolean status;
+    private boolean statusView;
 
     public CommentDTO() {
     }
@@ -108,5 +109,18 @@ public class CommentDTO {
 
     public void setRoomName(String meetingRoomName) {
         this.roomName = meetingRoomName;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public boolean isStatusView() {
+        return statusView;
+    }
+
+
+    public void setStatusView(boolean statusView) {
+        this.statusView = statusView;
     }
 }
