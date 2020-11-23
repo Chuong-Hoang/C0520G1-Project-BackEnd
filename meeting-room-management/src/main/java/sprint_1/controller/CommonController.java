@@ -13,6 +13,7 @@ import sprint_1.service.RoleService;
 import sprint_1.service.RoomStatusService;
 import sprint_1.service.RoomTypeService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -22,6 +23,7 @@ public class CommonController {
     private RoomTypeService roomTypeService;
     @Autowired
     private RoomStatusService roomStatusService;
+
     @Autowired
     private RoleService roleService;
     @GetMapping("room-type")
@@ -36,6 +38,7 @@ public class CommonController {
     @GetMapping("room-status")
     public ResponseEntity<List<RoomStatus>> showAllRoomStatus() {
         List<RoomStatus> list = roomStatusService.findAll();
+
         if (list.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -52,3 +55,4 @@ public class CommonController {
         }
     }
 }
+
