@@ -32,4 +32,19 @@ public class CommentServiceImpl implements CommentService {
     public void remove(Long id) {
         commentRepository.deleteById(id);
     }
+
+    @Override
+    public List<Comment> findCommentByRoomName(String name) {
+        return commentRepository.findAllByMeetingRoom_RoomNameContains(name);
+    }
+
+    @Override
+    public List<Comment> findAllBySender(String name) {
+        return commentRepository.findAllBySender_FullNameContains(name);
+    }
+
+    @Override
+    public List<Comment> findAllByStatus(boolean status) {
+        return commentRepository.findAllByStatus(status);
+    }
 }
