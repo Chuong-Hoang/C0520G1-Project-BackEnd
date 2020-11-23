@@ -32,4 +32,9 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     public void remove(Long id) {
         roomTypeRepository.deleteById(id);
     }
+
+    @Override
+    public RoomType findByName(String name) {
+        return roomTypeRepository.findByRoomTypeName(name);
+    }
 }

@@ -2,12 +2,10 @@ package sprint_1.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sprint_1.dto.MeetingRoomDto;
 import sprint_1.model.MeetingRoom;
 import sprint_1.repository.MeetingRoomRepository;
 import sprint_1.service.MeetingRoomService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
