@@ -59,7 +59,7 @@ public class AssetController {
 
 
     @GetMapping("/detail/{id}")
-    public ResponseEntity<Asset> detailAsset(@PathVariable Long id) {
+    public ResponseEntity<Asset> check(@PathVariable Long id) {
         Asset asset = assetService.findById(id);
         if (asset != null) {
             return new ResponseEntity<>(asset, HttpStatus.OK);
