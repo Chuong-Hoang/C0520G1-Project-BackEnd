@@ -9,11 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 import sprint_1.model.RoomStatus;
 import sprint_1.model.RoomType;
 import sprint_1.model.TimeFrame;
-import sprint_1.service.RoleService;
 import sprint_1.service.RoomStatusService;
 import sprint_1.service.RoomTypeService;
 import sprint_1.service.TimeFrameService;
-import sprint_1.model.Role;
 
 import java.util.List;
 
@@ -26,8 +24,6 @@ public class CommonController {
     @Autowired
     private RoomStatusService roomStatusService;
 
-    @Autowired
-    private RoleService roleService;
 
     @Autowired
     private TimeFrameService timeFrameService;
@@ -44,7 +40,6 @@ public class CommonController {
     @GetMapping("room-status")
     public ResponseEntity<List<RoomStatus>> showAllRoomStatus() {
         List<RoomStatus> list = roomStatusService.findAll();
-
         if (list.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -59,15 +54,4 @@ public class CommonController {
         }
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
-
-    @GetMapping("role-List")
-    public ResponseEntity<List<Role>> getRoleList() {
-        List<Role> roleList = roleService.findAll();
-        if (roleList.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(roleList, HttpStatus.OK);
-        }
-    }
 }
-

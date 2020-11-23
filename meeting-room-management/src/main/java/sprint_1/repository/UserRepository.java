@@ -3,8 +3,16 @@ package sprint_1.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import sprint_1.model.User;
 
-public interface UserRepository extends JpaRepository<User,Long> {
+import java.util.List;
+
+public interface UserRepository extends JpaRepository<User, Long> {
     Boolean existsByUserName(String username);
-  
+
     User findUserByUserName(String username);
+
+    List<User> findUserByUserNameContainingAndDepartmentContaining(String userName, String department);
+
+    List<User> findUserByUserNameContaining(String userName);
+
+    List<User> findUserByDepartmentContaining(String department);
 }

@@ -20,9 +20,6 @@ public class MeetingRoomSearchDTO {
     private String startTime;
     private String endTime;
 
-    public MeetingRoomSearchDTO() {
-    }
-  
     public String getStartDate() {
         return startDate;
     }
