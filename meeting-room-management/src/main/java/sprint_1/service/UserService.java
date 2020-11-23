@@ -18,4 +18,9 @@ public interface UserService {
 
     void changePassWord(Long id, String password);
 
+    List<User> findUserByUserNameContainingAndDepartmentContaining(String userName, String department);
+
+    List<User> findUserByUserNameContaining(String userName);
+
+    List<User> findUserByDepartmentContaining(String department);
 }

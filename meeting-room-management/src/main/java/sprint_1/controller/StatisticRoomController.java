@@ -8,15 +8,19 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import sprint_1.dto.BookedChartDTO;
 import sprint_1.dto.BookedRoomDTOList;
 import sprint_1.model.BookedRoom;
 import sprint_1.model.RoomType;
 import sprint_1.service.BookedRoomService;
+import sprint_1.service.MeetingRoomService;
 import sprint_1.service.RoomTypeService;
 
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 @Controller
 @CrossOrigin
@@ -28,49 +32,50 @@ public class StatisticRoomController {
     @Autowired
     RoomTypeService roomTypeService;
 
+    @Autowired
+    MeetingRoomService meetingRoomService;
+
     @GetMapping("/all")
-    public ResponseEntity<List<BookedRoomDTOList>> getListBookedRoom(){
+    public ResponseEntity<List<BookedRoomDTOList>> getListBookedRoom() {
         List<BookedRoom> bookedRoomList = bookedRoomService.findAll();
         List<BookedRoomDTOList> bookedRoomDTOLists = new ArrayList<>();
         if (bookedRoomList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        else {
+        } else {
             for (BookedRoom a : bookedRoomList) {
-                bookedRoomDTOLists.add(new BookedRoomDTOList(a.getIdBookedRoom(),a.getStartDate(),a.getEndDate(),a.getContent(),a.getBookedDate(),a.getBookedStatus(),a.getStartTime().getTimeValue(),a.getEndTime().getTimeValue(),a.getBookedUser().getUserName(),a.getMeetingRoom().getRoomName(),a.getMeetingRoom().getRoomType().getRoomTypeName()));
+                bookedRoomDTOLists.add(new BookedRoomDTOList(a.getIdBookedRoom(), a.getStartDate(), a.getEndDate(), a.getContent(), a.getBookedDate(), a.getBookedStatus(), bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime()),bookedRoomService.totalUse(a.getMeetingRoom().getRoomName()), a.getStartTime().getTimeValue(), a.getEndTime().getTimeValue(), a.getBookedUser().getUserName(), a.getMeetingRoom().getRoomName(), a.getMeetingRoom().getRoomType().getRoomTypeName()));
             }
         }
         return new ResponseEntity<>(bookedRoomDTOLists, HttpStatus.OK);
     }
 
     @GetMapping("/searchByTime")
-    public ResponseEntity<List<BookedRoomDTOList>> getListBookedRoomByTime(@RequestParam("param1") String startDate, @RequestParam("param2") String endDate){
+    public ResponseEntity<List<BookedRoomDTOList>> getListBookedRoomByTime(@RequestParam("param1") String startDate, @RequestParam("param2") String endDate) {
         List<BookedRoom> bookedRoomList = null;
         List<BookedRoomDTOList> bookedRoomDTOLists = new ArrayList<>();
         try {
-            bookedRoomList = bookedRoomService.searchTime(startDate,endDate);
+            bookedRoomList = bookedRoomService.searchTime(startDate, endDate);
         } catch (ParseException e) {
             e.printStackTrace();
         }
         assert bookedRoomList != null;
         if (bookedRoomList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        else {
+        } else {
             for (BookedRoom a : bookedRoomList) {
-                bookedRoomDTOLists.add(new BookedRoomDTOList(a.getIdBookedRoom(),a.getStartDate(),a.getEndDate(),a.getContent(),a.getBookedDate(),a.getBookedStatus(),a.getStartTime().getTimeValue(),a.getEndTime().getTimeValue(),a.getBookedUser().getUserName(),a.getMeetingRoom().getRoomName(),a.getMeetingRoom().getRoomType().getRoomTypeName()));
+                bookedRoomDTOLists.add(new BookedRoomDTOList(a.getIdBookedRoom(), a.getStartDate(), a.getEndDate(), a.getContent(), a.getBookedDate(), a.getBookedStatus(), bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime()),bookedRoomService.totalUse(a.getMeetingRoom().getRoomName()), a.getStartTime().getTimeValue(), a.getEndTime().getTimeValue(), a.getBookedUser().getUserName(), a.getMeetingRoom().getRoomName(), a.getMeetingRoom().getRoomType().getRoomTypeName()));
             }
-            return new ResponseEntity<>(bookedRoomDTOLists,HttpStatus.OK);
+            return new ResponseEntity<>(bookedRoomDTOLists, HttpStatus.OK);
         }
     }
 
     @GetMapping("/searchByRoom")
-    public ResponseEntity<List<BookedRoomDTOList>> getListBookedRoomByRoom(@RequestParam("roomType") String roomType, @RequestParam("roomName") String roomName,@RequestParam("month") String month, @RequestParam("year") String year){
+    public ResponseEntity<List<BookedRoomDTOList>> getListBookedRoomByRoom(@RequestParam("roomType") String roomType, @RequestParam("roomName") String roomName, @RequestParam("month") String month, @RequestParam("year") String year) {
         // (*) find all
         List<BookedRoom> list = bookedRoomService.findAll();
         if (list.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }else {
+        } else {
             List<BookedRoomDTOList> bookedRoomDTOLists = new ArrayList<>();
             // (1) search by roomType
             List<BookedRoom> listRoomType = new ArrayList<>();
@@ -79,8 +84,8 @@ public class StatisticRoomController {
                 listRoomType = list;
             } else {
                 // b. filter by 'roomType'
-                for(BookedRoom room : list){
-                    if(roomType.equals(room.getMeetingRoom().getRoomType().getRoomTypeName())){
+                for (BookedRoom room : list) {
+                    if (roomType.equals(room.getMeetingRoom().getRoomType().getRoomTypeName())) {
                         listRoomType.add(room);
                     }
                 }
@@ -115,55 +120,106 @@ public class StatisticRoomController {
                 // b. filter by 'year'
                 listYear = bookedRoomService.findAllByYear(year);
             }
-            if(listYear.isEmpty() ||  ("".equals(roomType) && "".equals(roomName) && "".equals(month) && "".equals(year))){
+            if (listYear.isEmpty() || ("".equals(roomType) && "".equals(roomName) && "".equals(month) && "".equals(year))) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }else {
+            } else {
                 for (BookedRoom b : listYear) {
-                    bookedRoomDTOLists.add(new BookedRoomDTOList(b.getIdBookedRoom(),b.getStartDate(),b.getEndDate(),b.getContent(),b.getBookedDate(),b.getBookedStatus(),b.getStartTime().getTimeValue(),b.getEndTime().getTimeValue(),b.getBookedUser().getUserName(),b.getMeetingRoom().getRoomName(),b.getMeetingRoom().getRoomType().getRoomTypeName()));
+                    bookedRoomDTOLists.add(new BookedRoomDTOList(b.getIdBookedRoom(), b.getStartDate(), b.getEndDate(), b.getContent(), b.getBookedDate(), b.getBookedStatus(), bookedRoomService.compareEffective(b.getStartDate(), b.getEndDate(), b.getStartTime().getIdTime(), b.getEndTime().getIdTime()),bookedRoomService.totalUse(b.getMeetingRoom().getRoomName()), b.getStartTime().getTimeValue(), b.getEndTime().getTimeValue(), b.getBookedUser().getUserName(), b.getMeetingRoom().getRoomName(), b.getMeetingRoom().getRoomType().getRoomTypeName()));
                 }
-                return new ResponseEntity<>(bookedRoomDTOLists,HttpStatus.OK);
+                return new ResponseEntity<>(bookedRoomDTOLists, HttpStatus.OK);
             }
         }
     }
 
     @GetMapping("/allRoomType")
-    public ResponseEntity<List<RoomType>> getListRoomType(){
+    public ResponseEntity<List<RoomType>> getListRoomType() {
         List<RoomType> roomTypeList = roomTypeService.findAll();
         if (roomTypeList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        else {
-            return new ResponseEntity<>(roomTypeList,HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(roomTypeList, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/allRoomZone")
-    public ResponseEntity<List<String>> getListZone(){
-        List<BookedRoom> bookedRoomList = bookedRoomService.findAll();
-        List<String> zoneDTOLists = new ArrayList<>();
-        if (bookedRoomList.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        else {
-            for (BookedRoom a : bookedRoomList) {
-                zoneDTOLists.add(a.getMeetingRoom().getZone());
-            }
-            return new ResponseEntity<>(zoneDTOLists,HttpStatus.OK);
-        }
-    }
-    
     @GetMapping("/allRoomName")
-    public ResponseEntity<List<String>> getListRoomName(){
+    public ResponseEntity<List<String>> getListRoomName() {
         List<BookedRoom> bookedRoomList = bookedRoomService.findAll();
         List<String> roomNameDTOLists = new ArrayList<>();
         if (bookedRoomList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        else {
+        } else {
             for (BookedRoom a : bookedRoomList) {
                 roomNameDTOLists.add(a.getMeetingRoom().getRoomName());
             }
-            return new ResponseEntity<>(roomNameDTOLists,HttpStatus.OK);
+            return new ResponseEntity<>(roomNameDTOLists, HttpStatus.OK);
         }
+    }
+
+    @GetMapping("/allDataChart")
+    public ResponseEntity<List<BookedChartDTO>> getAllDataChart(@RequestParam("start") String start, @RequestParam("end") String end) {
+        List<BookedRoom> bookedRoomList = bookedRoomService.findAll();
+        Map<Integer, BookedChartDTO> bookedRoomDTOMaps = new TreeMap<>();
+        List<BookedChartDTO> bookedRoomDTOLists = new ArrayList<>();
+        double effective1 = 0;
+        double effective2 = 0;
+        double effective3 = 0;
+        double effective4 = 0;
+        double effective5 = 0;
+        double effective6 = 0;
+        double effective7 = 0;
+        double effective8 = 0;
+        double effective9 = 0;
+        double effective10 = 0;
+        double effective11 = 0;
+        double effective12 = 0;
+        if (bookedRoomList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            for (int year1 = Integer.parseInt(start); year1 <= Integer.parseInt(end); year1++) {
+                for (BookedRoom a : bookedRoomList) {
+                    if ((a.getStartDate()).contains((year1 + "-01"))) {
+                        effective1 += bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime());
+                    } else if ((a.getStartDate()).contains((year1 + "-02"))) {
+                        effective2 += bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime());
+
+                    } else if ((a.getStartDate()).contains((year1 + "-03"))) {
+                        effective3 += bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime());
+
+                    } else if ((a.getStartDate()).contains((year1 + "-04"))) {
+                        effective4 += bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime());
+
+                    } else if ((a.getStartDate()).contains((year1 + "-05"))) {
+                        effective5 += bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime());
+
+                    } else if ((a.getStartDate()).contains((year1 + "-06"))) {
+                        effective6 += bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime());
+
+                    } else if ((a.getStartDate()).contains((year1 + "-07"))) {
+                        effective7 += bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime());
+
+                    } else if ((a.getStartDate()).contains((year1 + "-08"))) {
+                        effective8 += bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime());
+
+                    } else if ((a.getStartDate()).contains((year1 + "-09"))) {
+                        effective9 += bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime());
+
+                    } else if ((a.getStartDate()).contains((year1 + "-10"))) {
+                        effective10 += bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime());
+
+                    } else if ((a.getStartDate()).contains((year1 + "-11"))) {
+                        effective11 += bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime());
+
+                    } else if ((a.getStartDate()).contains((year1 + "-12"))) {
+                        effective12 += bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime());
+                    }
+                }
+                bookedRoomDTOMaps.put(year1, new BookedChartDTO(String.valueOf(year1), effective1, effective2, effective3, effective4, effective5, effective6, effective7, effective8, effective9, effective10, effective11, effective12));
+            }
+
+            for (Integer key : bookedRoomDTOMaps.keySet()) {
+                bookedRoomDTOLists.add(bookedRoomDTOMaps.get(key));
+            }
+        }
+        return new ResponseEntity<>(bookedRoomDTOLists, HttpStatus.OK);
     }
 }

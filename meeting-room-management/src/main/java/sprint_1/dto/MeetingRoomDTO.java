@@ -2,7 +2,7 @@ package sprint_1.dto;
 
 import java.util.List;
 
-public class MeetingRoomDto {
+public class MeetingRoomDTO {
 
     private Long idRoom;
 
@@ -26,7 +26,7 @@ public class MeetingRoomDto {
 
     private List<AssetDetailDTO> asset;
 
-    public MeetingRoomDto(Long idRoom, String roomName, String floor, String zone, String capacity, String image, String startDate, String endDate, String roomTypeName, String roomStatusName, List<AssetDetailDTO> asset) {
+    public MeetingRoomDTO(Long idRoom, String roomName, String floor, String zone, String capacity, String image, String startDate, String endDate, String roomTypeName, String roomStatusName, List<AssetDetailDTO> asset) {
         this.idRoom = idRoom;
         this.roomName = roomName;
         this.floor = floor;
@@ -40,7 +40,7 @@ public class MeetingRoomDto {
         this.asset = asset;
     }
 
-    public MeetingRoomDto(Long idRoom, String roomName, String floor, String zone, String capacity, String image, String startDate, String endDate, String roomTypeName, String roomStatusName) {
+    public MeetingRoomDTO(Long idRoom, String roomName, String floor, String zone, String capacity, String image, String startDate, String endDate, String roomTypeName, String roomStatusName) {
         this.idRoom = idRoom;
         this.roomName = roomName;
         this.floor = floor;
@@ -53,7 +53,7 @@ public class MeetingRoomDto {
         this.roomStatusName = roomStatusName;
     }
 
-    public MeetingRoomDto() {
+    public MeetingRoomDTO() {
     }
 
 

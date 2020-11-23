@@ -12,6 +12,7 @@ import sprint_1.model.AssetDetail;
 import sprint_1.service.AssetDetailService;
 import sprint_1.service.AssetService;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,7 +83,7 @@ public class AssetController {
     }
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> add(@RequestBody AssetDTO assetDTO) {
+    public ResponseEntity<Void> add(@Valid  @RequestBody AssetDTO assetDTO) {
         Asset asset = new Asset();
         asset.setAssetName(assetDTO.getAssetName());
         asset.setUsingQuantity(assetDTO.getUsingQuantity());
@@ -96,7 +97,7 @@ public class AssetController {
     }
 
     @PatchMapping(value = "/edit/{id}")
-    public ResponseEntity<Asset> updateAsset(@RequestBody AssetDTO assetDTO, @PathVariable Long id) {
+    public ResponseEntity<Asset> updateAsset( @Valid @RequestBody AssetDTO assetDTO, @PathVariable Long id) {
         System.err.println("Updating " + id);
         Asset asset = assetService.findById(id);
         if (asset == null) {

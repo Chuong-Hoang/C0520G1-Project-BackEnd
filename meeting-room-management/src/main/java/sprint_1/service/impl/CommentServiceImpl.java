@@ -35,6 +35,16 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<Comment> findCommentByRoomName(String name) {
-        return commentRepository.findCommentByMeetingRoom_RoomName(name);
+        return commentRepository.findAllByMeetingRoom_RoomNameContains(name);
+    }
+
+    @Override
+    public List<Comment> findAllBySender(String name) {
+        return commentRepository.findAllBySender_FullNameContains(name);
+    }
+
+    @Override
+    public List<Comment> findAllByStatus(boolean status) {
+        return commentRepository.findAllByStatus(status);
     }
 }
