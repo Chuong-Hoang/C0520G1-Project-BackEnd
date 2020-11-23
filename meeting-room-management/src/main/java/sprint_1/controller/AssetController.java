@@ -6,12 +6,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sprint_1.dto.AssetDTO;
+import sprint_1.dto.AssetDetailDTO;
 import sprint_1.model.Asset;
 import sprint_1.model.AssetDetail;
 import sprint_1.service.AssetDetailService;
 import sprint_1.service.AssetService;
-import sprint_1.service.MeetingRoomService;
 
+import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -24,9 +26,6 @@ public class AssetController {
 
     @Autowired
     AssetDetailService assetDetailService;
-
-    @Autowired
-    MeetingRoomService meetingRoomService;
 
     @GetMapping()
     public ResponseEntity<List<Asset>> listAssets() {
@@ -49,18 +48,42 @@ public class AssetController {
         return new ResponseEntity<>(assets, HttpStatus.OK);
     }
 
+
+    @GetMapping("/inputSearch")
+    public ResponseEntity<List<Asset>> searchAssets(@RequestParam("valueSearch") String inputSearch) {
+        List<Asset> assets = assetService.findAllByAssetNameContaining(inputSearch);
+        if (assets.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(assets, HttpStatus.OK);
+    }
+
+
+
+
     @GetMapping("/detail/{id}")
-    public ResponseEntity<Asset> check(@PathVariable Long id) {
+    public ResponseEntity<AssetDTO> check(@PathVariable Long id) {
         Asset asset = assetService.findById(id);
+        List<AssetDetail> assetDetails = (List<AssetDetail>) asset.getAssetDetailCollection();
+        List<AssetDetailDTO> assetDetailsDTO = new ArrayList<>();
         if (asset != null) {
-            return new ResponseEntity<>(asset, HttpStatus.OK);
+            for (AssetDetail element: assetDetails) {
+                AssetDetailDTO assetDetailDTO = new AssetDetailDTO();
+                assetDetailDTO.setNameMeetingRoom(element.getMeetingRoomAsset().getRoomName());
+                assetDetailDTO.setQuantity(element.getAssetQuantity());
+                assetDetailsDTO.add(assetDetailDTO);
+            }
+            AssetDTO assetDTO = new AssetDTO(asset.getIdAsset(), asset.getAssetName(),
+                    asset.getUsingQuantity(), asset.getFixingQuantity(), asset.getTotal(),
+                    asset.getImage(), asset.getDescription(), asset.getPrice(), assetDetailsDTO);
+            return new ResponseEntity<>(assetDTO, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> add(@RequestBody AssetDTO assetDTO) {
+    public ResponseEntity<Void> add(@Valid  @RequestBody AssetDTO assetDTO) {
         Asset asset = new Asset();
         asset.setAssetName(assetDTO.getAssetName());
         asset.setUsingQuantity(assetDTO.getUsingQuantity());
@@ -74,7 +97,7 @@ public class AssetController {
     }
 
     @PatchMapping(value = "/edit/{id}")
-    public ResponseEntity<Asset> updateAsset(@RequestBody AssetDTO assetDTO, @PathVariable Long id) {
+    public ResponseEntity<Asset> updateAsset( @Valid @RequestBody AssetDTO assetDTO, @PathVariable Long id) {
         System.err.println("Updating " + id);
         Asset asset = assetService.findById(id);
         if (asset == null) {
@@ -91,5 +114,15 @@ public class AssetController {
 
         assetService.save(asset);
         return new ResponseEntity<>(asset, HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/delete/{id}")
+    public ResponseEntity<Asset> deleteAsset(@PathVariable Long id) {
+        Asset asset = assetService.findById(id);
+        if (asset == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        assetService.delete(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
