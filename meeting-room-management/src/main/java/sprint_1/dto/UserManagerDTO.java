@@ -1,13 +1,40 @@
 package sprint_1.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 public class UserManagerDTO {
+
+    public interface checkCreate {
+    }
+
+    ;
+
+    public interface checkEdit {
+    }
+
+    ;
+
     private long id;
+
+    @NotEmpty(message = "Vui lòng nhập tên đăng nhập", groups = checkCreate.class)
+    @Pattern(regexp = "^[a-z0-9]{3,30}$", message = "Tên đăng nhập không hợp lệ", groups = checkCreate.class)
     private String userName;
+
+    @NotEmpty(message = "Vui lòng nhập mật khẩu", groups = checkEdit.class)
+    @Pattern(regexp = "^[a-z0-9]{6,30}$", message = "Mật khẩu không hợp lệ", groups = checkEdit.class)
     private String password;
+
+    @NotEmpty(message = "Vui lòng nhập họ tên", groups = checkEdit.class)
+    @Size(max = 30, message = "Họ tên không hợp lệ", groups = checkEdit.class)
     private String fullName;
+
+    @NotEmpty(message = "Vui lòng nhập bộ phận", groups = checkEdit.class)
+    @Size(max = 30, message = "Bộ phận không hợp lệ", groups = checkEdit.class)
     private String department;
+
+    @NotEmpty(message = "Vui lòng chọn quyền", groups = checkEdit.class)
     private String roleName;
 
     public UserManagerDTO() {
@@ -20,15 +47,6 @@ public class UserManagerDTO {
         this.department = department;
         this.roleName = roleName;
     }
-
-//    public UserManagerDTO(long id, String userName, String password, String fullName, String department, String roleName) {
-//        this.id = id;
-//        this.userName = userName;
-//        this.password = password;
-//        this.fullName = fullName;
-//        this.department = department;
-//        this.roleName = roleName;
-//    }
 
     public UserManagerDTO(String userName, String password, String fullName, String department, String roleName) {
         this.userName = userName;
