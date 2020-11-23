@@ -24,6 +24,11 @@ import java.util.List;
 public class MeetingRoomController {
     @Autowired
     private MeetingRoomService meetingRoomService;
+    @Autowired
+    RoomTypeService roomTypeService;
+    @Autowired
+    RoomStatusService roomStatusService;
+
 
 
     @GetMapping("")
@@ -106,5 +111,39 @@ public class MeetingRoomController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(listSearch, HttpStatus.OK);
+    }
+
+    @GetMapping("/getRoomTypeList")
+    public ResponseEntity<List<RoomType>> listRoomType() {
+        List<RoomType> roomTypes = roomTypeService.findAll();
+        if (roomTypes.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(roomTypes, HttpStatus.OK);
+    }
+
+    @GetMapping("/getRoomStatusList")
+    public ResponseEntity<List<RoomStatus>> listRoomStatus() {
+        List<RoomStatus> roomStatuses = roomStatusService.findAll();
+        if (roomStatuses.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(roomStatuses, HttpStatus.OK);
+    }
+
+    @PostMapping("/createMeetingRoom")
+    public ResponseEntity<Void> add(@RequestBody MeetingRoomDTO meetingRoomDTO){
+        MeetingRoom meetingRoom = new MeetingRoom();
+        meetingRoom.setRoomName(meetingRoomDTO.getRoomName());
+        meetingRoom.setFloor(meetingRoomDTO.getFloor());
+        meetingRoom.setZone(meetingRoomDTO.getZone());
+        meetingRoom.setCapacity(meetingRoomDTO.getCapacity());
+        meetingRoom.setImage(meetingRoomDTO.getImage());
+        meetingRoom.setStartDate(meetingRoomDTO.getStartDate());
+        meetingRoom.setEndDate(meetingRoomDTO.getEndDate());
+        meetingRoom.setRoomType(roomTypeService.findById(meetingRoomDTO.getRoomTypeId()));
+        meetingRoom.setRoomStatus(roomStatusService.findById(meetingRoomDTO.getRoomStatusId()));
+        meetingRoomService.save(meetingRoom);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

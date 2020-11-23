@@ -29,7 +29,7 @@ public class RoomType {
     }
 
     public void setRoomTypeName(String roomTypeName) {
-        roomTypeName = roomTypeName;
+        this.roomTypeName = roomTypeName;
     }
 
     public Collection<MeetingRoom> getMeetingRoomCollection_1() {
