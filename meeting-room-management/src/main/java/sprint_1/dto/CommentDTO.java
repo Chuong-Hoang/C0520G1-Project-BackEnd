@@ -18,17 +18,17 @@ public class CommentDTO {
     public CommentDTO() {
     }
 
-    public CommentDTO(Long idComment, String senderName,String commentTime,Long idReplier, String contentReply, String contentComment, String replierName, String errorTypeName, String meetingRoomName,boolean status) {
+    public CommentDTO(Long idComment, String senderName,String commentTime, String contentReply, String contentComment, String replierName, String errorTypeName, String meetingRoomName,boolean status,boolean statusView) {
         this.idComment = idComment;
         this.senderName = senderName;
         this.commentTime = commentTime;
-        this.idReplier = idReplier;
         this.contentReply = contentReply;
         this.contentComment = contentComment;
         this.replierName = replierName;
         this.errorTypeName = errorTypeName;
         this.roomName = meetingRoomName;
         this.status = status;
+        this.statusView = statusView;
     }
 
     public boolean getStatus() {
