@@ -16,25 +16,25 @@ public class MeetingRoomSearchDTO {
 
     private String roomAsset;
 
-    private String startDay;
-    private String endDay;
+    private String startDate;
+    private String endDate;
     private String startTime;
     private String endTime;
 
-    public String getStartDay() {
-        return startDay;
+    public String getStartDate() {
+        return startDate;
     }
 
-    public void setStartDay(String startDay) {
-        this.startDay = startDay;
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
     }
 
-    public String getEndDay() {
-        return endDay;
+    public String getEndDate() {
+        return endDate;
     }
 
-    public void setEndDay(String endDay) {
-        this.endDay = endDay;
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 
     public String getStartTime() {

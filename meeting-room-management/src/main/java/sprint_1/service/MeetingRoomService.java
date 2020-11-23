@@ -6,6 +6,7 @@ import sprint_1.model.MeetingRoom;
 import java.util.List;
 
 public interface MeetingRoomService {
+    MeetingRoom findByRoomName (String name);
 
     List<MeetingRoom> findAll();
 
@@ -15,7 +16,7 @@ public interface MeetingRoomService {
 
     void delete(Long id);
 
-    List<MeetingRoom> searchAllFields(String nameRoom, String capacity, String floor, String zone);
+    List<MeetingRoom> searchAllFields(String nameRoom, String capacity, String floor,String zone, String status,
+            String type);
 
-    List<MeetingRoom> searchByName(String roomName);
 }

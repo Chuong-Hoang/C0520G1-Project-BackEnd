@@ -7,12 +7,19 @@ import sprint_1.model.MeetingRoom;
 import java.util.List;
 
 public interface MeetingRoomRepository extends JpaRepository<MeetingRoom, Long> {
-//    List<MeetingRoom> findAllByRoomNameAndCapacityAndFloorAndRoomStatus_RoomStatusNameAndRoomType_RoomTypeNameAndZoneContaining
-//            (String nameRoom, String capacity, String floor, String status, String type, String zone);
+    List<MeetingRoom> findAllByDeleteStatusTrueAndRoomNameContainingAndCapacityContainingAndZoneContainingAndFloorContainingAndRoomStatus_RoomStatusNameAndRoomType_RoomTypeName
+            (String nameRoom, String capacity, String floor, String zone, String status, String type);
 
-    List<MeetingRoom> findAllByRoomNameContainingAndCapacityContainingAndZoneContainingAndFloorContaining
-//    List<MeetingRoom> findAllByRoomNameOrCapacityOrFloorOrZoneContaining
+    List<MeetingRoom> findAllByDeleteStatusTrueAndRoomNameContainingAndCapacityContainingAndZoneContainingAndFloorContaining
             (String nameRoom, String capacity, String floor, String zone);
 
-    List<MeetingRoom> findAllByRoomNameContaining(String nameRoom);
+    List<MeetingRoom> findAllByDeleteStatusTrueAndRoomNameContainingAndCapacityContainingAndZoneContainingAndFloorContainingAndRoomStatus_RoomStatusName
+            (String nameRoom, String capacity, String floor, String zone, String status);
+
+    List<MeetingRoom> findAllByDeleteStatusTrueAndRoomNameContainingAndCapacityContainingAndZoneContainingAndFloorContainingAndRoomType_RoomTypeName
+            (String nameRoom, String capacity, String floor, String zone, String type);
+
+    List<MeetingRoom> findAllByDeleteStatusTrue();
+
+    MeetingRoom findByRoomName(String name);
 }
