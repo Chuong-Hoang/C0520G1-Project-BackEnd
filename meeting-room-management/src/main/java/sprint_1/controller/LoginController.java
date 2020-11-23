@@ -36,7 +36,6 @@ public class LoginController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtTokenProvider.generateJwtToken(authentication);
-        System.err.println("start: " + jwt + " :end");
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()

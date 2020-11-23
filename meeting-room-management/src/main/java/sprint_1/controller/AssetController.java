@@ -6,12 +6,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sprint_1.dto.AssetDTO;
+import sprint_1.dto.AssetDetailDTO;
 import sprint_1.model.Asset;
 import sprint_1.model.AssetDetail;
 import sprint_1.service.AssetDetailService;
 import sprint_1.service.AssetService;
 import sprint_1.service.MeetingRoomService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -50,10 +52,21 @@ public class AssetController {
     }
 
     @GetMapping("/detail/{id}")
-    public ResponseEntity<Asset> check(@PathVariable Long id) {
+    public ResponseEntity<AssetDTO> check(@PathVariable Long id) {
         Asset asset = assetService.findById(id);
+        List<AssetDetail> assetDetails = (List<AssetDetail>) asset.getAssetDetailCollection();
+        List<AssetDetailDTO> assetDetailsDTO = new ArrayList<>();
         if (asset != null) {
-            return new ResponseEntity<>(asset, HttpStatus.OK);
+            for (AssetDetail element: assetDetails) {
+                AssetDetailDTO assetDetailDTO = new AssetDetailDTO();
+                assetDetailDTO.setNameMeetingRoom(element.getMeetingRoomAsset().getRoomName());
+                assetDetailDTO.setQuantity(element.getAssetQuantity());
+                assetDetailsDTO.add(assetDetailDTO);
+            }
+            AssetDTO assetDTO = new AssetDTO(asset.getIdAsset(), asset.getAssetName(),
+                    asset.getUsingQuantity(), asset.getFixingQuantity(), asset.getTotal(),
+                    asset.getImage(), asset.getDescription(), asset.getPrice(), assetDetailsDTO);
+            return new ResponseEntity<>(assetDTO, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

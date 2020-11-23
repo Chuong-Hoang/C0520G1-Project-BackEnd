@@ -1,6 +1,7 @@
 package sprint_1.dto;
 
 public class AssetDetailDTO {
+    private String nameMeetingRoom;
     private String nameAssetDetail;
     private String quantity;
 
@@ -10,6 +11,14 @@ public class AssetDetailDTO {
     }
 
     public AssetDetailDTO() {
+    }
+
+    public String getNameMeetingRoom() {
+        return nameMeetingRoom;
+    }
+
+    public void setNameMeetingRoom(String nameMeetingRoom) {
+        this.nameMeetingRoom = nameMeetingRoom;
     }
 
     public String getNameAssetDetail() {

@@ -75,9 +75,7 @@ public class UserController {
 
     @PostMapping(value = "/create")
     public ResponseEntity<?> registerUser(@RequestBody UserManagerDTO userManagerDTO) {
-        System.err.println("Hello");
         if (userService.existsByUserName(userManagerDTO.getUserName())) {
-            System.err.println("trung");
 //            return ResponseEntity
 //                    .badRequest()
 //                    .body("Error: Username is already taken!");
@@ -117,7 +115,6 @@ public class UserController {
     //----------------------------change password-------------------------------
     @PutMapping(value = "/{id}/change-password")
     public ResponseEntity<?> changePassWordUser(@RequestBody ChangePasswordDTO changePasswordDTO, @PathVariable("id") long id) {
-        System.err.print("helo");
         User user = userService.findById(id);
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
