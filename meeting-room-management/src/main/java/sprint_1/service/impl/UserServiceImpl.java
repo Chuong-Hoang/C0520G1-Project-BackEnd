@@ -47,4 +47,18 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Override
+    public List<User> findUserByUserNameContainingAndDepartmentContaining(String userName, String department) {
+        return userRepository.findUserByUserNameContainingAndDepartmentContaining(userName, department);
+    }
+
+    @Override
+    public List<User> findUserByUserNameContaining(String userName) {
+        return userRepository.findUserByUserNameContaining(userName);
+    }
+
+    @Override
+    public List<User> findUserByDepartmentContaining(String department) {
+        return userRepository.findUserByDepartmentContaining(department);
+    }
 }

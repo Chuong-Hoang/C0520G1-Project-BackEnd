@@ -25,16 +25,6 @@ public class UserController {
     @Autowired
     private RoleService roleService;
 
-    @GetMapping("/role-List")
-    public ResponseEntity<List<Role>> getRoleList() {
-        List<Role> roleList = roleService.findAll();
-        if (roleList.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(roleList, HttpStatus.OK);
-        }
-    }
-
     //--------------------------------Get All-List --------------------------------------------
     @GetMapping()
     public ResponseEntity<List<UserManagerDTO>> getListUser() {
@@ -44,7 +34,7 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             for (User user : userList) {
-                newList.add(new UserManagerDTO(user.getIdUser(),user.getUserName(), user.getFullName(), user.getDepartment(), user.getRole().getRoleName()));
+                newList.add(new UserManagerDTO(user.getIdUser(), user.getUserName(), user.getFullName(), user.getDepartment(), user.getRole().getRoleName()));
             }
             return new ResponseEntity<>(newList, HttpStatus.OK);
         }
@@ -121,5 +111,33 @@ public class UserController {
         }
         userService.changePassWord(id, changePasswordDTO.getNewPassword());
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    //-------------------------------- Search-------------------------------
+    @GetMapping(value = "/search")
+    public ResponseEntity<List<UserManagerDTO>> findUserByUserNameOrDepartment(@RequestParam("input1") String input1,
+                                                                               @RequestParam("input2") String input2) {
+        List<User> userAllList = userService.findAll();
+        List<User> searchUser = new ArrayList<>();
+        if (userAllList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        if ("".equals(input1) && "".equals(input2)) {
+            searchUser = userAllList;
+        } else if ("".equals(input1)) {
+            searchUser = userService.findUserByDepartmentContaining(input2);
+        } else if ("".equals(input2)) {
+            searchUser = userService.findUserByUserNameContaining(input1);
+        } else {
+            searchUser = userService.findUserByUserNameContainingAndDepartmentContaining(input1, input2);
+        }
+        List<UserManagerDTO> searchList = new ArrayList<>();
+        for (User user : searchUser) {
+            searchList.add(new UserManagerDTO(user.getIdUser(), user.getUserName(), user.getFullName(), user.getDepartment(), user.getRole().getRoleName()));
+        }
+        if (searchList.isEmpty()) {
+            return new ResponseEntity<>(searchList, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(searchList, HttpStatus.OK);
     }
 }
