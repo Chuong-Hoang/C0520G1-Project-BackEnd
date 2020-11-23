@@ -32,4 +32,9 @@ public class CommentServiceImpl implements CommentService {
     public void remove(Long id) {
         commentRepository.deleteById(id);
     }
+
+    @Override
+    public List<Comment> findCommentByRoomName(String name) {
+        return commentRepository.findCommentByMeetingRoom_RoomName(name);
+    }
 }

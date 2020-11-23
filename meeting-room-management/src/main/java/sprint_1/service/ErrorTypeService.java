@@ -5,6 +5,8 @@ import sprint_1.model.ErrorType;
 import java.util.List;
 
 public interface ErrorTypeService {
+    ErrorType findByErrorTypeName (String name);
+
     List<ErrorType> findAll();
 
     void save(ErrorType errorType);

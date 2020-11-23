@@ -1,6 +1,9 @@
 package sprint_1.dto;
 
+import java.util.List;
+
 public class AssetDTO {
+    private Long idAsset;
 
     private String assetName;
 
@@ -16,10 +19,14 @@ public class AssetDTO {
 
     private String price;
 
+
+    private List<AssetDetailDTO> assetDetailDTOList;
+
     public AssetDTO() {
     }
 
-    public AssetDTO(String assetName, String usingQuantity, String fixingQuantity, String total, String image, String description, String price) {
+    public AssetDTO(Long idAsset, String assetName, String usingQuantity, String fixingQuantity, String total, String image, String description, String price, List<AssetDetailDTO> assetDetailDTOList) {
+        this.idAsset = idAsset;
         this.assetName = assetName;
         this.usingQuantity = usingQuantity;
         this.fixingQuantity = fixingQuantity;
@@ -27,6 +34,15 @@ public class AssetDTO {
         this.image = image;
         this.description = description;
         this.price = price;
+        this.assetDetailDTOList = assetDetailDTOList;
+    }
+
+    public Long getIdAsset() {
+        return idAsset;
+    }
+
+    public void setIdAsset(Long idAsset) {
+        this.idAsset = idAsset;
     }
 
     public String getAssetName() {
@@ -85,4 +101,11 @@ public class AssetDTO {
         this.price = price;
     }
 
+    public List<AssetDetailDTO> getAssetDetailDTOList() {
+        return assetDetailDTOList;
+    }
+
+    public void setAssetDetailDTOList(List<AssetDetailDTO> assetDetailDTOList) {
+        this.assetDetailDTOList = assetDetailDTOList;
+    }
 }
