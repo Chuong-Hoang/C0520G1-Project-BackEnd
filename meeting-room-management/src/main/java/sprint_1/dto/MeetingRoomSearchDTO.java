@@ -1,7 +1,6 @@
 package sprint_1.dto;
 
 public class MeetingRoomSearchDTO {
-
     private String roomName;
 
     private String floor;
@@ -21,6 +20,9 @@ public class MeetingRoomSearchDTO {
     private String startTime;
     private String endTime;
 
+    public MeetingRoomSearchDTO() {
+    }
+  
     public String getStartDay() {
         return startDay;
     }
@@ -60,10 +62,6 @@ public class MeetingRoomSearchDTO {
     public void setRoomAsset(String roomAsset) {
         this.roomAsset = roomAsset;
     }
-
-    public MeetingRoomSearchDTO() {
-    }
-
 
     public String getRoomName() {
         return roomName;
@@ -112,4 +110,5 @@ public class MeetingRoomSearchDTO {
     public void setRoomStatusName(String roomStatusName) {
         this.roomStatusName = roomStatusName;
     }
+
 }
