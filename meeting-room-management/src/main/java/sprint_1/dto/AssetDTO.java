@@ -1,6 +1,7 @@
 package sprint_1.dto;
 
 public class AssetDTO {
+
     private String assetName;
 
     private String usingQuantity;
@@ -14,6 +15,19 @@ public class AssetDTO {
     private String description;
 
     private String price;
+
+    public AssetDTO() {
+    }
+
+    public AssetDTO(String assetName, String usingQuantity, String fixingQuantity, String total, String image, String description, String price) {
+        this.assetName = assetName;
+        this.usingQuantity = usingQuantity;
+        this.fixingQuantity = fixingQuantity;
+        this.total = total;
+        this.image = image;
+        this.description = description;
+        this.price = price;
+    }
 
     public String getAssetName() {
         return assetName;
@@ -70,4 +84,5 @@ public class AssetDTO {
     public void setPrice(String price) {
         this.price = price;
     }
+
 }

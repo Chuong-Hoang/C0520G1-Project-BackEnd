@@ -32,4 +32,9 @@ public class AssetServiceImpl implements AssetService {
     public void delete(Long id) {
         assetRepository.deleteById(id);
     }
+
+    @Override
+    public List<Asset> findAllByAssetNameContaining(String name) {
+        return assetRepository.findAllByAssetNameContaining(name);
+    }
 }
