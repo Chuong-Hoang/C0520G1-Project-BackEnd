@@ -14,6 +14,11 @@ public class ErrorTypeServiceImpl implements ErrorTypeService {
     ErrorTypeRepository errorTypeRepository;
 
     @Override
+    public ErrorType findByErrorTypeName(String name) {
+       return errorTypeRepository.findByErrorTypeName(name);
+    }
+
+    @Override
     public List<ErrorType> findAll() {
         return errorTypeRepository.findAll();
     }
