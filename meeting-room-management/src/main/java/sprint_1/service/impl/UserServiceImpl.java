@@ -2,11 +2,13 @@ package sprint_1.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sprint_1.dto.UserManagerDTO;
 import sprint_1.model.User;
 import sprint_1.repository.UserRepository;
 import sprint_1.service.UserService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -32,4 +34,17 @@ public class UserServiceImpl implements UserService {
     public void deleteById(Long id) {
         userRepository.deleteById(id);
     }
+
+    @Override
+    public boolean existsByUserName(String username) {
+        return userRepository.existsByUserName(username);
+    }
+
+    @Override
+    public void changePassWord(Long id, String password) {
+        User user = userRepository.findById(id).orElse(null);
+        user.setPassword(password);
+        userRepository.save(user);
+    }
+
 }

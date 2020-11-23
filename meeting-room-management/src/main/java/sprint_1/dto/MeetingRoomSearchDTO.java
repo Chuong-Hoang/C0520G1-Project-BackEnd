@@ -2,34 +2,41 @@ package sprint_1.dto;
 
 public class MeetingRoomSearchDTO {
     private String roomName;
+
     private String floor;
+
     private String zone;
+
     private String capacity;
+
     private String roomTypeName;
+
     private String roomStatusName;
+
     private String roomAsset;
-    private String startDate;
-    private String endDate;
+
+    private String startDay;
+    private String endDay;
     private String startTime;
     private String endTime;
 
     public MeetingRoomSearchDTO() {
     }
-
-    public String getStartDate() {
-        return startDate;
+  
+    public String getStartDay() {
+        return startDay;
     }
 
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
+    public void setStartDay(String startDay) {
+        this.startDay = startDay;
     }
 
-    public String getEndDate() {
-        return endDate;
+    public String getEndDay() {
+        return endDay;
     }
 
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
+    public void setEndDay(String endDay) {
+        this.endDay = endDay;
     }
 
     public String getStartTime() {
@@ -46,6 +53,14 @@ public class MeetingRoomSearchDTO {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    public String getRoomAsset() {
+        return roomAsset;
+    }
+
+    public void setRoomAsset(String roomAsset) {
+        this.roomAsset = roomAsset;
     }
 
     public String getRoomName() {
@@ -96,11 +111,4 @@ public class MeetingRoomSearchDTO {
         this.roomStatusName = roomStatusName;
     }
 
-    public String getRoomAsset() {
-        return roomAsset;
-    }
-
-    public void setRoomAsset(String roomAsset) {
-        this.roomAsset = roomAsset;
-    }
 }
