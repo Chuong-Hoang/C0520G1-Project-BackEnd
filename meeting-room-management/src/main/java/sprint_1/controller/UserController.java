@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import sprint_1.dto.ChangePasswordDTO;
 import sprint_1.dto.UserManagerDTO;
@@ -24,6 +25,8 @@ public class UserController {
     private UserService userService;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     //--------------------------------Get All-List --------------------------------------------
     @GetMapping()
@@ -75,11 +78,10 @@ public class UserController {
         // Create new user's account
         User user = new User();
         user.setUserName(userManagerDTO.getUserName());
-        user.setPassword(userManagerDTO.getPassword());
+        user.setPassword(passwordEncoder.encode(userManagerDTO.getPassword()));
         user.setFullName(userManagerDTO.getFullName());
         user.setDepartment(userManagerDTO.getDepartment());
         user.setRole(roleService.findByRoleName(userManagerDTO.getRoleName()));
-        System.err.print(userManagerDTO.getPassword());
         userService.save(user);
 //        return ResponseEntity.ok("User registered successfully!");
         return new ResponseEntity<>(HttpStatus.OK);
@@ -93,7 +95,7 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         user.setUserName(userManagerDTO.getUserName());
-        user.setPassword(userManagerDTO.getPassword());
+        user.setPassword(passwordEncoder.encode(userManagerDTO.getPassword()));
         user.setFullName(userManagerDTO.getFullName());
         user.setDepartment(userManagerDTO.getDepartment());
         user.setRole(roleService.findByRoleName(userManagerDTO.getRoleName()));
@@ -109,7 +111,7 @@ public class UserController {
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        userService.changePassWord(id, changePasswordDTO.getNewPassword());
+        userService.changePassWord(id, passwordEncoder.encode(changePasswordDTO.getNewPassword()));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
