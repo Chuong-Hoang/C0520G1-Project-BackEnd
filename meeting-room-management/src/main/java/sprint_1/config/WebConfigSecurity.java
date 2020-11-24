@@ -14,6 +14,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import sprint_1.service.impl.UserDetailsServiceImpl;
 
+/**
+ * WebConfigSecurity
+ *
+ * Version 1.0
+ *
+ * Date: 24/11/2020
+ *
+ * Copyright
+ *
+ * Author: Le Toan
+ */
 @Configuration
 @EnableWebSecurity
 public class WebConfigSecurity extends WebSecurityConfigurerAdapter {
@@ -41,6 +52,11 @@ public class WebConfigSecurity extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * check authentication and authorization of user
+     * @param http
+     * @throws Exception
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
