@@ -1,9 +1,17 @@
 package sprint_1.dto;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
+
 public class ChangePasswordDTO {
     private long id;
     private String userName;
+
+    @NotEmpty(message = "Vui lòng nhập mật khẩu")
     private String oldPassword;
+
+    @NotEmpty(message = "Vui lòng nhập mật khẩu")
+    @Pattern(regexp = "^[a-z0-9]{6,30}$", message = "Mật khẩu không hợp lệ")
     private String newPassword;
 
     public long getId() {

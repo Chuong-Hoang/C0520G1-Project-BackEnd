@@ -5,10 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import sprint_1.dto.ChangePasswordDTO;
 import sprint_1.dto.UserManagerDTO;
-import sprint_1.model.Role;
 
 import sprint_1.model.User;
 import sprint_1.service.RoleService;
@@ -67,15 +68,14 @@ public class UserController {
     }
 
     @PostMapping(value = "/create")
-    public ResponseEntity<?> registerUser(@RequestBody UserManagerDTO userManagerDTO) {
+    public ResponseEntity<?> registerUser(@Validated({UserManagerDTO.checkCreate.class, UserManagerDTO.checkEdit.class})
+                                          @RequestBody UserManagerDTO userManagerDTO, BindingResult bindingResult) {
         if (userService.existsByUserName(userManagerDTO.getUserName())) {
-//            return ResponseEntity
-//                    .badRequest()
-//                    .body("Error: Username is already taken!");
-//            return ResponseEntity.badRequest().body("Error: username duplicate");
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        // Create new user's account
+        if (bindingResult.hasErrors()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
         User user = new User();
         user.setUserName(userManagerDTO.getUserName());
         user.setPassword(passwordEncoder.encode(userManagerDTO.getPassword()));
@@ -83,15 +83,18 @@ public class UserController {
         user.setDepartment(userManagerDTO.getDepartment());
         user.setRole(roleService.findByRoleName(userManagerDTO.getRoleName()));
         userService.save(user);
-//        return ResponseEntity.ok("User registered successfully!");
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     //--------------------------- Edit user--------------------------------
     @PutMapping(value = "/edit/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable("id") long id, @RequestBody UserManagerDTO userManagerDTO) {
+    public ResponseEntity<?> updateUser(@Validated(UserManagerDTO.checkEdit.class) @PathVariable("id") long id,
+                                        @RequestBody UserManagerDTO userManagerDTO, BindingResult bindingResult) {
         User user = userService.findById(id);
         if (user == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         user.setUserName(userManagerDTO.getUserName());
@@ -100,19 +103,25 @@ public class UserController {
         user.setDepartment(userManagerDTO.getDepartment());
         user.setRole(roleService.findByRoleName(userManagerDTO.getRoleName()));
         userService.save(user);
-//        return ResponseEntity.ok("User registered successfully!");
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     //----------------------------change password-------------------------------
     @PutMapping(value = "/{id}/change-password")
-    public ResponseEntity<?> changePassWordUser(@RequestBody ChangePasswordDTO changePasswordDTO, @PathVariable("id") long id) {
+    public ResponseEntity<?> changePassWordUser(@Validated @RequestBody ChangePasswordDTO changePasswordDTO,
+                                                @PathVariable("id") long id, BindingResult bindingResult) {
         User user = userService.findById(id);
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        userService.changePassWord(id, passwordEncoder.encode(changePasswordDTO.getNewPassword()));
-        return new ResponseEntity<>(HttpStatus.OK);
+        if (bindingResult.hasErrors()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        if (userService.existsByPassword(changePasswordDTO.getOldPassword())) {
+            userService.changePassWord(id, passwordEncoder.encode(changePasswordDTO.getNewPassword()));
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     //-------------------------------- Search-------------------------------
