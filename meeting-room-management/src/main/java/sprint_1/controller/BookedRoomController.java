@@ -227,27 +227,18 @@ public class BookedRoomController {
         return new ResponseEntity<>(listDTO, HttpStatus.OK);
     }
 
-    @GetMapping("meeting-room/{id}")
-    public ResponseEntity<MeetingRoom> findMeetingRoomById(@PathVariable long id) {
-        MeetingRoom meetingRoom = meetingRoomService.findById(id);
-        if (meetingRoom == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(meetingRoom, HttpStatus.OK);
-    }
+//    @GetMapping("meeting-room/{id}")
+//    public ResponseEntity<MeetingRoom> findMeetingRoomById(@PathVariable long id) {
+//        MeetingRoom meetingRoom = meetingRoomService.findById(id);
+//        if (meetingRoom == null) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//        return new ResponseEntity<>(meetingRoom, HttpStatus.OK);
+//    }
 
     @GetMapping("time-frame")
     public ResponseEntity<List<TimeFrame>> showAllTimeFrames() {
         List<TimeFrame> list = timeFrameService.findAll();
-        if (list.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(list, HttpStatus.OK);
-    }
-
-    @GetMapping("room-type")
-    public ResponseEntity<List<RoomType>> showAllRoomTypes() {
-        List<RoomType> list = roomTypeService.findAll();
         if (list.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
