@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sprint_1.dto.AssetDetailDTO;
 import sprint_1.dto.MeetingRoomDTO;
+
 import sprint_1.dto.MeetingRoomSearchDTO;
 import sprint_1.model.AssetDetail;
 import sprint_1.model.MeetingRoom;
@@ -15,6 +16,7 @@ import sprint_1.service.MeetingRoomService;
 import sprint_1.service.RoomStatusService;
 import sprint_1.service.RoomTypeService;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -177,7 +179,7 @@ public class MeetingRoomController {
     }
 
     @PostMapping("/createMeetingRoom")
-    public ResponseEntity<Void> add(@RequestBody MeetingRoomDTO meetingRoomDTO){
+    public ResponseEntity<Void> add(@Valid @RequestBody MeetingRoomDTO meetingRoomDTO){
         MeetingRoom meetingRoom = new MeetingRoom();
         meetingRoom.setRoomName(meetingRoomDTO.getRoomName());
         meetingRoom.setFloor(meetingRoomDTO.getFloor());
@@ -187,8 +189,51 @@ public class MeetingRoomController {
         meetingRoom.setStartDate(meetingRoomDTO.getStartDate());
         meetingRoom.setEndDate(meetingRoomDTO.getEndDate());
         meetingRoom.setRoomType(roomTypeService.findByName(meetingRoomDTO.getRoomTypeName()));
-        meetingRoom.setRoomStatus(roomStatusService.findByName(meetingRoomDTO.getRoomStatusName()));
+        meetingRoom.setRoomStatus(roomStatusService.findById(1L));
+        meetingRoom.setDeleteStatus(true);
         meetingRoomService.save(meetingRoom);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @GetMapping("/find/{id}")
+    public ResponseEntity<MeetingRoomDTO> findMeetingById(@PathVariable long id) {
+        MeetingRoom meetingRoom = meetingRoomService.findById(id);
+        if (meetingRoom == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        MeetingRoomDTO meetingRoomDTO = new MeetingRoomDTO(
+                meetingRoom.getIdRoom(),
+                meetingRoom.getRoomName(),
+                meetingRoom.getFloor(),
+                meetingRoom.getZone(),
+                meetingRoom.getCapacity(),
+                meetingRoom.getImage(),
+                meetingRoom.getStartDate(),
+                meetingRoom.getEndDate(),
+                meetingRoom.getRoomType().getRoomTypeName(),
+                meetingRoom.getRoomStatus().getRoomStatusName()
+        );
+        return new ResponseEntity<>(meetingRoomDTO, HttpStatus.OK);
+    }
+
+    @PutMapping("/edit/{id}")
+    public ResponseEntity<Void> editMeetingRoom(@Valid @RequestBody MeetingRoomDTO meetingRoomDTO, @PathVariable Long id){
+        MeetingRoom meetingRoom = meetingRoomService.findById(id);
+        if(meetingRoom == null){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        meetingRoom.setRoomName(meetingRoomDTO.getRoomName());
+        meetingRoom.setFloor(meetingRoomDTO.getFloor());
+        meetingRoom.setZone(meetingRoomDTO.getZone());
+        meetingRoom.setCapacity(meetingRoomDTO.getCapacity());
+        meetingRoom.setImage(meetingRoomDTO.getImage());
+        meetingRoom.setStartDate(meetingRoomDTO.getStartDate());
+        meetingRoom.setEndDate(meetingRoomDTO.getEndDate());
+        meetingRoom.setRoomType(roomTypeService.findByName(meetingRoomDTO.getRoomTypeName()));
+        meetingRoom.setRoomStatus(roomStatusService.findById(1L));
+        meetingRoom.setDeleteStatus(true);
+        meetingRoomService.save(meetingRoom);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }
