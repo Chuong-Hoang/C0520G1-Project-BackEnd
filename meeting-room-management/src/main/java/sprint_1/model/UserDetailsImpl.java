@@ -9,6 +9,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * UserDetailsImpl
+ *
+ * Version 1.0
+ *
+ * Date: 24/11/2020
+ *
+ * Copyright
+ *
+ * Author: Le Toan
+ */
 public class UserDetailsImpl implements UserDetails {
     private long idUser;
     private String username;
