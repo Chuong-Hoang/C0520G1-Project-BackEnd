@@ -20,7 +20,7 @@ public class MeetingRoomServiceImpl implements MeetingRoomService {
 
     @Override
     public List<MeetingRoom> findAll() {
-        return meetingRoomRepository.findAll();
+        return meetingRoomRepository.findAllByDeleteStatusTrue();
     }
 
     @Override
@@ -36,5 +36,18 @@ public class MeetingRoomServiceImpl implements MeetingRoomService {
     @Override
     public void delete(Long id) {
         meetingRoomRepository.deleteById(id);
+    }
+
+    @Override
+    public List<MeetingRoom> searchAllFields(String nameRoom, String capacity, String floor, String zone, String status, String type) {
+        if (status.equals("") && !type.isEmpty()) {
+            return meetingRoomRepository.findAllByDeleteStatusTrueAndRoomNameContainingAndCapacityContainingAndZoneContainingAndFloorContainingAndRoomStatus_RoomStatusName(nameRoom, capacity, floor, zone, status);
+        } else if (type.equals("") && !status.isEmpty()) {
+            return meetingRoomRepository.findAllByDeleteStatusTrueAndRoomNameContainingAndCapacityContainingAndZoneContainingAndFloorContainingAndRoomType_RoomTypeName(nameRoom, capacity, floor, zone, type);
+        } else if (type.equals("") && status.equals("")) {
+            return meetingRoomRepository.findAllByDeleteStatusTrueAndRoomNameContainingAndCapacityContainingAndZoneContainingAndFloorContaining(nameRoom, capacity, floor, zone);
+        } else {
+            return meetingRoomRepository.findAllByDeleteStatusTrueAndRoomNameContainingAndCapacityContainingAndZoneContainingAndFloorContainingAndRoomStatus_RoomStatusNameAndRoomType_RoomTypeName(nameRoom, capacity, floor, zone, status, type);
+        }
     }
 }

@@ -12,4 +12,6 @@ public interface RoomStatusService {
     RoomStatus findById(Long id);
 
     void remove(Long id);
+
+    RoomStatus findByName(String name);
 }

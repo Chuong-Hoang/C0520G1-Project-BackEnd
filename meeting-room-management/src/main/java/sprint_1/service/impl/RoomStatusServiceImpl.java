@@ -32,4 +32,9 @@ public class RoomStatusServiceImpl implements RoomStatusService {
     public void remove(Long id) {
         roomStatusRepository.deleteById(id);
     }
+
+    @Override
+    public RoomStatus findByName(String name) {
+        return roomStatusRepository.findRoomStatusByRoomStatusName(name);
+    }
 }
