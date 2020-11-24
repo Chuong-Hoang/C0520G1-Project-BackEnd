@@ -234,8 +234,6 @@ public class BookedRoomController {
 //        return new ResponseEntity<>(meetingRoom, HttpStatus.OK);
 //    }
 
-
-
     @PostMapping("meeting-room-find") // list and search combined
     public ResponseEntity<List<MeetingRoom>> showMeetingRooms(@RequestBody MeetingRoomSearchDTO meetingRoomSearchDTO) throws Exception {
         // (*) find all
