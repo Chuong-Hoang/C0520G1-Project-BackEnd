@@ -1,12 +1,17 @@
 package sprint_1.controller;
 
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
 import sprint_1.dto.BookedChartDTO;
 import sprint_1.dto.BookedRoomDTOList;
 import sprint_1.model.BookedRoom;
@@ -15,12 +20,20 @@ import sprint_1.service.BookedRoomService;
 import sprint_1.service.MeetingRoomService;
 import sprint_1.service.RoomTypeService;
 
-import javax.naming.AuthenticationException;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+/**
+ * controller StatisticRoomController
+ * <p>
+ * Version 1.0
+ * <p>
+ * Date: 24/11/2020
+ * <p>
+ * Copyright
+ * <p>
+ * Modification Logs:
+ * DATE                 AUTHOR          DESCRIPTION
+ * -----------------------------------------------------------------------
+ * 24/11/2020        Nguyễn Tiến Hải            statistic
+ */
 
 @Controller
 @CrossOrigin
@@ -35,22 +48,15 @@ public class StatisticRoomController {
     @Autowired
     MeetingRoomService meetingRoomService;
 
-    @GetMapping("/all")
-    public ResponseEntity<List<BookedRoomDTOList>> getListBookedRoom() {
-        List<BookedRoom> bookedRoomList = bookedRoomService.findAll();
-        List<BookedRoomDTOList> bookedRoomDTOLists = new ArrayList<>();
-        if (bookedRoomList.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            for (BookedRoom a : bookedRoomList) {
-                bookedRoomDTOLists.add(new BookedRoomDTOList(a.getIdBookedRoom(), a.getStartDate(), a.getEndDate(), a.getContent(), a.getBookedDate(), a.getBookedStatus(), bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime()), bookedRoomService.totalUse(a.getMeetingRoom().getRoomName()), a.getStartTime().getTimeValue(), a.getEndTime().getTimeValue(), a.getBookedUser().getUserName(), a.getMeetingRoom().getRoomName(), a.getMeetingRoom().getRoomType().getRoomTypeName()));
-            }
-        }
-        return new ResponseEntity<>(bookedRoomDTOLists, HttpStatus.OK);
-    }
 
+    /**
+     * statistic by time
+     *
+     * @param startDate , endDate
+     * @return list BookedRoomDTOList
+     */
     @GetMapping("/searchByTime")
-    public ResponseEntity<List<BookedRoomDTOList>> getListBookedRoomByTime(@RequestParam("param1") String startDate, @RequestParam("param2") String endDate) {
+    public ResponseEntity<List<BookedRoomDTOList>> getListBookedRoomByTime(@RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate) {
         List<BookedRoom> bookedRoomList = null;
         List<BookedRoomDTOList> bookedRoomDTOLists = new ArrayList<>();
         if (bookedRoomService.validateDate(startDate, endDate)) {
@@ -63,16 +69,23 @@ public class StatisticRoomController {
             if (bookedRoomList.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {
-                for (BookedRoom a : bookedRoomList) {
-                    bookedRoomDTOLists.add(new BookedRoomDTOList(a.getIdBookedRoom(), a.getStartDate(), a.getEndDate(), a.getContent(), a.getBookedDate(), a.getBookedStatus(), bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime()), bookedRoomService.totalUse(a.getMeetingRoom().getRoomName()), a.getStartTime().getTimeValue(), a.getEndTime().getTimeValue(), a.getBookedUser().getUserName(), a.getMeetingRoom().getRoomName(), a.getMeetingRoom().getRoomType().getRoomTypeName()));
+                for (BookedRoom bookedRoom : bookedRoomList) {
+                    bookedRoomDTOLists.add(new BookedRoomDTOList(bookedRoom.getIdBookedRoom(), bookedRoom.getStartDate(), bookedRoom.getEndDate(), bookedRoom.getContent(), bookedRoom.getBookedDate(), bookedRoom.getBookedStatus(), bookedRoomService.compareEffective(bookedRoom.getStartDate(), bookedRoom.getEndDate(), bookedRoom.getStartTime().getIdTime(), bookedRoom.getEndTime().getIdTime()), bookedRoomService.totalUse(bookedRoom.getMeetingRoom().getRoomName()), bookedRoom.getStartTime().getTimeValue(), bookedRoom.getEndTime().getTimeValue(), bookedRoom.getBookedUser().getUserName(), bookedRoom.getMeetingRoom().getRoomName(), bookedRoom.getMeetingRoom().getRoomType().getRoomTypeName()));
                 }
                 return new ResponseEntity<>(bookedRoomDTOLists, HttpStatus.OK);
             }
-        }else {
+        } else {
             return null;
         }
     }
 
+
+    /**
+     * statistic by room
+     *
+     * @param roomType , roomName , month ,year
+     * @return list BookedRoomDTOList
+     */
     @GetMapping("/searchByRoom")
     public ResponseEntity<List<BookedRoomDTOList>> getListBookedRoomByRoom(@RequestParam("roomType") String roomType, @RequestParam("roomName") String roomName, @RequestParam("month") String month, @RequestParam("year") String year) {
         // (*) find all
@@ -88,9 +101,9 @@ public class StatisticRoomController {
                 listRoomType = list;
             } else {
                 // b. filter by 'roomType'
-                for (BookedRoom room : list) {
-                    if (roomType.equals(room.getMeetingRoom().getRoomType().getRoomTypeName())) {
-                        listRoomType.add(room);
+                for (BookedRoom bookedRoom : list) {
+                    if (roomType.equals(bookedRoom.getMeetingRoom().getRoomType().getRoomTypeName())) {
+                        listRoomType.add(bookedRoom);
                     }
                 }
             }
@@ -127,14 +140,20 @@ public class StatisticRoomController {
             if (listYear.isEmpty() || ("".equals(roomType) && "".equals(roomName) && "".equals(month) && "".equals(year))) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {
-                for (BookedRoom b : listYear) {
-                    bookedRoomDTOLists.add(new BookedRoomDTOList(b.getIdBookedRoom(), b.getStartDate(), b.getEndDate(), b.getContent(), b.getBookedDate(), b.getBookedStatus(), bookedRoomService.compareEffective(b.getStartDate(), b.getEndDate(), b.getStartTime().getIdTime(), b.getEndTime().getIdTime()), bookedRoomService.totalUse(b.getMeetingRoom().getRoomName()), b.getStartTime().getTimeValue(), b.getEndTime().getTimeValue(), b.getBookedUser().getUserName(), b.getMeetingRoom().getRoomName(), b.getMeetingRoom().getRoomType().getRoomTypeName()));
+                for (BookedRoom bookedRoom : listYear) {
+                    bookedRoomDTOLists.add(new BookedRoomDTOList(bookedRoom.getIdBookedRoom(), bookedRoom.getStartDate(), bookedRoom.getEndDate(), bookedRoom.getContent(), bookedRoom.getBookedDate(), bookedRoom.getBookedStatus(), bookedRoomService.compareEffective(bookedRoom.getStartDate(), bookedRoom.getEndDate(), bookedRoom.getStartTime().getIdTime(), bookedRoom.getEndTime().getIdTime()), bookedRoomService.totalUse(bookedRoom.getMeetingRoom().getRoomName()), bookedRoom.getStartTime().getTimeValue(), bookedRoom.getEndTime().getTimeValue(), bookedRoom.getBookedUser().getUserName(), bookedRoom.getMeetingRoom().getRoomName(), bookedRoom.getMeetingRoom().getRoomType().getRoomTypeName()));
                 }
                 return new ResponseEntity<>(bookedRoomDTOLists, HttpStatus.OK);
             }
         }
     }
 
+
+    /**
+     * get all room type
+     *
+     * @return list RoomType
+     */
     @GetMapping("/allRoomType")
     public ResponseEntity<List<RoomType>> getListRoomType() {
         List<RoomType> roomTypeList = roomTypeService.findAll();
@@ -145,6 +164,12 @@ public class StatisticRoomController {
         }
     }
 
+
+    /**
+     * get all room type
+     *
+     * @return list roomName
+     */
     @GetMapping("/allRoomName")
     public ResponseEntity<List<String>> getListRoomName() {
         List<BookedRoom> bookedRoomList = bookedRoomService.findAll();
@@ -152,15 +177,22 @@ public class StatisticRoomController {
         if (bookedRoomList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
-            for (BookedRoom a : bookedRoomList) {
-                roomNameDTOLists.add(a.getMeetingRoom().getRoomName());
+            for (BookedRoom bookedRoom : bookedRoomList) {
+                roomNameDTOLists.add(bookedRoom.getMeetingRoom().getRoomName());
             }
             return new ResponseEntity<>(roomNameDTOLists, HttpStatus.OK);
         }
     }
 
+
+    /**
+     * statistic by room
+     *
+     * @param startYear, endYear
+     * @return list BookedRoomDTOList
+     */
     @GetMapping("/allDataChart")
-    public ResponseEntity<List<BookedChartDTO>> getAllDataChart(@RequestParam("start") String start, @RequestParam("end") String end) {
+    public ResponseEntity<List<BookedChartDTO>> getAllDataChart(@RequestParam("startYear") String startYear, @RequestParam("endYear") String endYear) {
         List<BookedRoom> bookedRoomList = bookedRoomService.findAll();
         Map<Integer, BookedChartDTO> bookedRoomDTOMaps = new TreeMap<>();
         List<BookedChartDTO> bookedRoomDTOLists = new ArrayList<>();
@@ -176,48 +208,72 @@ public class StatisticRoomController {
         double effective10 = 0;
         double effective11 = 0;
         double effective12 = 0;
+        int count1 = 0;
+        int count2 = 0;
+        int count3 = 0;
+        int count4 = 0;
+        int count5 = 0;
+        int count6 = 0;
+        int count7 = 0;
+        int count8 = 0;
+        int count9 = 0;
+        int count10 = 0;
+        int count11 = 0;
+        int count12 = 0;
         if (bookedRoomList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
-            for (int year1 = Integer.parseInt(start); year1 <= Integer.parseInt(end); year1++) {
-                for (BookedRoom a : bookedRoomList) {
-                    if ((a.getStartDate()).contains((year1 + "-01"))) {
-                        effective1 += bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime());
-                    } else if ((a.getStartDate()).contains((year1 + "-02"))) {
-                        effective2 += bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime());
+            for (int year1 = Integer.parseInt(startYear); year1 <= Integer.parseInt(endYear); year1++) {
+                for (BookedRoom bookedRoom : bookedRoomList) {
+                    if ((bookedRoom.getStartDate()).contains((year1 + "-01"))) {
+                        count1++;
+                        effective1 += bookedRoomService.compareEffective(bookedRoom.getStartDate(), bookedRoom.getEndDate(), bookedRoom.getStartTime().getIdTime(), bookedRoom.getEndTime().getIdTime());
+                    } else if ((bookedRoom.getStartDate()).contains((year1 + "-02"))) {
+                        count2++;
+                        effective2 += bookedRoomService.compareEffective(bookedRoom.getStartDate(), bookedRoom.getEndDate(), bookedRoom.getStartTime().getIdTime(), bookedRoom.getEndTime().getIdTime());
 
-                    } else if ((a.getStartDate()).contains((year1 + "-03"))) {
-                        effective3 += bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime());
+                    } else if ((bookedRoom.getStartDate()).contains((year1 + "-03"))) {
+                        count3++;
+                        effective3 += bookedRoomService.compareEffective(bookedRoom.getStartDate(), bookedRoom.getEndDate(), bookedRoom.getStartTime().getIdTime(), bookedRoom.getEndTime().getIdTime());
 
-                    } else if ((a.getStartDate()).contains((year1 + "-04"))) {
-                        effective4 += bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime());
+                    } else if ((bookedRoom.getStartDate()).contains((year1 + "-04"))) {
+                        count4++;
+                        effective4 += bookedRoomService.compareEffective(bookedRoom.getStartDate(), bookedRoom.getEndDate(), bookedRoom.getStartTime().getIdTime(), bookedRoom.getEndTime().getIdTime());
 
-                    } else if ((a.getStartDate()).contains((year1 + "-05"))) {
-                        effective5 += bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime());
+                    } else if ((bookedRoom.getStartDate()).contains((year1 + "-05"))) {
+                        count5++;
+                        effective5 += bookedRoomService.compareEffective(bookedRoom.getStartDate(), bookedRoom.getEndDate(), bookedRoom.getStartTime().getIdTime(), bookedRoom.getEndTime().getIdTime());
 
-                    } else if ((a.getStartDate()).contains((year1 + "-06"))) {
-                        effective6 += bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime());
+                    } else if ((bookedRoom.getStartDate()).contains((year1 + "-06"))) {
+                        count6++;
+                        effective6 += bookedRoomService.compareEffective(bookedRoom.getStartDate(), bookedRoom.getEndDate(), bookedRoom.getStartTime().getIdTime(), bookedRoom.getEndTime().getIdTime());
 
-                    } else if ((a.getStartDate()).contains((year1 + "-07"))) {
-                        effective7 += bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime());
+                    } else if ((bookedRoom.getStartDate()).contains((year1 + "-07"))) {
+                        count7++;
+                        effective7 += bookedRoomService.compareEffective(bookedRoom.getStartDate(), bookedRoom.getEndDate(), bookedRoom.getStartTime().getIdTime(), bookedRoom.getEndTime().getIdTime());
 
-                    } else if ((a.getStartDate()).contains((year1 + "-08"))) {
-                        effective8 += bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime());
+                    } else if ((bookedRoom.getStartDate()).contains((year1 + "-08"))) {
+                        count8++;
+                        effective8 += bookedRoomService.compareEffective(bookedRoom.getStartDate(), bookedRoom.getEndDate(), bookedRoom.getStartTime().getIdTime(), bookedRoom.getEndTime().getIdTime());
 
-                    } else if ((a.getStartDate()).contains((year1 + "-09"))) {
-                        effective9 += bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime());
+                    } else if ((bookedRoom.getStartDate()).contains((year1 + "-09"))) {
+                        count9++;
+                        effective9 += bookedRoomService.compareEffective(bookedRoom.getStartDate(), bookedRoom.getEndDate(), bookedRoom.getStartTime().getIdTime(), bookedRoom.getEndTime().getIdTime());
 
-                    } else if ((a.getStartDate()).contains((year1 + "-10"))) {
-                        effective10 += bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime());
+                    } else if ((bookedRoom.getStartDate()).contains((year1 + "-10"))) {
+                        count10++;
+                        effective10 += bookedRoomService.compareEffective(bookedRoom.getStartDate(), bookedRoom.getEndDate(), bookedRoom.getStartTime().getIdTime(), bookedRoom.getEndTime().getIdTime());
 
-                    } else if ((a.getStartDate()).contains((year1 + "-11"))) {
-                        effective11 += bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime());
+                    } else if ((bookedRoom.getStartDate()).contains((year1 + "-11"))) {
+                        count11++;
+                        effective11 += bookedRoomService.compareEffective(bookedRoom.getStartDate(), bookedRoom.getEndDate(), bookedRoom.getStartTime().getIdTime(), bookedRoom.getEndTime().getIdTime());
 
-                    } else if ((a.getStartDate()).contains((year1 + "-12"))) {
-                        effective12 += bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime());
+                    } else if ((bookedRoom.getStartDate()).contains((year1 + "-12"))) {
+                        count12++;
+                        effective12 += bookedRoomService.compareEffective(bookedRoom.getStartDate(), bookedRoom.getEndDate(), bookedRoom.getStartTime().getIdTime(), bookedRoom.getEndTime().getIdTime());
                     }
                 }
-                bookedRoomDTOMaps.put(year1, new BookedChartDTO(String.valueOf(year1), effective1, effective2, effective3, effective4, effective5, effective6, effective7, effective8, effective9, effective10, effective11, effective12));
+                bookedRoomDTOMaps.put(year1, new BookedChartDTO(String.valueOf(year1), (effective1 / count1), (effective2 / count2), (effective3 / count3), (effective4 / count4), (effective5 / count5), (effective6 / count6), (effective7 / count7), (effective8 / count8), (effective9 / count9), (effective10 / count10), (effective11 / count11), (effective12 / count12)));
             }
 
             for (Integer key : bookedRoomDTOMaps.keySet()) {
