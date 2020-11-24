@@ -7,9 +7,10 @@ import java.util.Collection;
 public class RoomType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long idRoomType;
 
-    private String RoomTypeName;
+    private String roomTypeName;
 
     @OneToMany(mappedBy = "roomType", cascade = CascadeType.ALL)
     private Collection<MeetingRoom> meetingRoomCollection_1;
@@ -25,11 +26,11 @@ public class RoomType {
     }
 
     public String getRoomTypeName() {
-        return RoomTypeName;
+        return roomTypeName;
     }
 
     public void setRoomTypeName(String roomTypeName) {
-        RoomTypeName = roomTypeName;
+        this.roomTypeName = roomTypeName;
     }
 
     public Collection<MeetingRoom> getMeetingRoomCollection_1() {
@@ -40,3 +41,4 @@ public class RoomType {
         this.meetingRoomCollection_1 = meetingRoomCollection_1;
     }
 }
+
