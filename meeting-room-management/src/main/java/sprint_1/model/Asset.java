@@ -3,6 +3,21 @@ package sprint_1.model;
 import javax.persistence.*;
 import java.util.Collection;
 
+/**
+ * Asset
+ *
+ * Version 1.0
+ *
+ * Date: 22-11-2020
+ *
+ * Copyright
+ *
+ * Modification Logs:
+ * DATE                 AUTHOR          DESCRIPTION
+ * -----------------------------------------------------------------------
+ * 21-11-2020         TungTS            Create Class Model
+ */
+
 @Entity
 public class Asset {
     @Id
@@ -25,8 +40,6 @@ public class Asset {
 
     @OneToMany(mappedBy = "asset", cascade = CascadeType.ALL)
     private Collection<AssetDetail> assetDetailCollection;
-
-    //Ai muốn tạo constructor có đối số thì nhớ tạo thêm constructor không đối số nhé!!!
 
     public Long getIdAsset() {
         return idAsset;
