@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface AssetRepository extends JpaRepository<Asset, Long> {
     List<Asset> findAllByAssetNameContaining(String name);
+
+    Boolean existsByAssetName(String assetName);
 }

@@ -58,9 +58,6 @@ public class AssetController {
         return new ResponseEntity<>(assets, HttpStatus.OK);
     }
 
-
-
-
     @GetMapping("/detail/{id}")
     public ResponseEntity<AssetDTO> check(@PathVariable Long id) {
         Asset asset = assetService.findById(id);
@@ -84,6 +81,9 @@ public class AssetController {
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> add(@Valid  @RequestBody AssetDTO assetDTO) {
+        if (assetService.existsByAssetName(assetDTO.getAssetName())) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
         Asset asset = new Asset();
         asset.setAssetName(assetDTO.getAssetName());
         asset.setUsingQuantity(assetDTO.getUsingQuantity());
