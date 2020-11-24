@@ -56,7 +56,7 @@ public class CommentController {
     }
 
     @GetMapping("/comment/search")
-    public ResponseEntity<List<CommentDTO>> findCommentByRoomName(@RequestParam("value1") String a, @RequestParam("value2") String b, @RequestParam("value3") boolean c) {
+    public ResponseEntity<List<CommentDTO>> findCommentByRoomName(@RequestParam("value1") String userNameSearch, @RequestParam("value2") String roomNameSearch, @RequestParam("value3") boolean statusSearch) {
         List<Comment> listAll = commentService.findAll();
         List<Comment> commentListUserName ;
         if (listAll.isEmpty()) {
@@ -64,30 +64,30 @@ public class CommentController {
         }
 
 // (1) search by userName
-        if ("".equals(a)){
+        if ("".equals(userNameSearch)){
             commentListUserName = listAll;
         } else {
-           commentListUserName = commentService.findAllBySender(a);
+           commentListUserName = commentService.findAllBySender(userNameSearch);
         }
 
 // (2) search by roomName
         List<Comment> commentListRoomName = new ArrayList<>();
-        if ("".equals(b)){
+        if ("".equals(roomNameSearch)){
             commentListRoomName = commentListUserName;
         } else {
             for (Comment room: commentListUserName ){
-                if ((room.getMeetingRoom().getRoomName().toLowerCase()).contains(b.toLowerCase())){
+                if ((room.getMeetingRoom().getRoomName().toLowerCase()).contains(roomNameSearch.toLowerCase())){
                     commentListRoomName.add(room);
                 }
             }
         }
 // (3) search by status
         List<Comment> commentList = new ArrayList<>();
-        if (!c){
+        if (!statusSearch){
             commentList = commentListRoomName;
         } else {
             for (Comment room: commentListRoomName ){
-                if (c == room.isStatus()){
+                if (statusSearch == room.isStatus()){
                     commentList.add(room);
                 }
             }
