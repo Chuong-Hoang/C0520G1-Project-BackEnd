@@ -37,4 +37,9 @@ public class AssetServiceImpl implements AssetService {
     public List<Asset> findAllByAssetNameContaining(String name) {
         return assetRepository.findAllByAssetNameContaining(name);
     }
+
+    @Override
+    public boolean existsByAssetName(String assetName) {
+        return assetRepository.existsByAssetName(assetName);
+    }
 }

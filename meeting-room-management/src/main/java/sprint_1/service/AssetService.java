@@ -15,4 +15,6 @@ public interface AssetService {
     void delete(Long id);
 
     List<Asset> findAllByAssetNameContaining(String name);
+
+    boolean existsByAssetName(String assetName);
 }

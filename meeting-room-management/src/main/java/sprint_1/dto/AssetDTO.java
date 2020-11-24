@@ -1,8 +1,4 @@
 package sprint_1.dto;
-
-import org.springframework.format.annotation.NumberFormat;
-
-import javax.validation.Validator;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
