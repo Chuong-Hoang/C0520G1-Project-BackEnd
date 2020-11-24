@@ -25,6 +25,16 @@ public class MeetingRoom {
 
     private String endDate;
 
+    private boolean deleteStatus;
+
+    public boolean isDeleteStatus() {
+        return deleteStatus;
+    }
+
+    public void setDeleteStatus(boolean deleteStatus) {
+        this.deleteStatus = deleteStatus;
+    }
+
     @OneToMany(mappedBy = "meetingRoomAsset", cascade = CascadeType.ALL)
     private Collection<AssetDetail> assetDetailCollection;
 

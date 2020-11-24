@@ -13,4 +13,8 @@ public interface AssetService {
     void save(Asset asset);
 
     void delete(Long id);
+
+    List<Asset> findAllByAssetNameContaining(String name);
+
+    boolean existsByAssetName(String assetName);
 }
