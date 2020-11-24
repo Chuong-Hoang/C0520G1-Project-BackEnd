@@ -13,21 +13,22 @@ public class CommentDTO {
     private String errorTypeName;
     private String roomName;
     private boolean status;
+    private boolean statusView;
 
     public CommentDTO() {
     }
 
-    public CommentDTO(Long idComment, String senderName,String commentTime,Long idReplier, String contentReply, String contentComment, String replierName, String errorTypeName, String meetingRoomName,boolean status) {
+    public CommentDTO(Long idComment, String senderName,String commentTime, String contentReply, String contentComment, String replierName, String errorTypeName, String meetingRoomName,boolean status,boolean statusView) {
         this.idComment = idComment;
         this.senderName = senderName;
         this.commentTime = commentTime;
-        this.idReplier = idReplier;
         this.contentReply = contentReply;
         this.contentComment = contentComment;
         this.replierName = replierName;
         this.errorTypeName = errorTypeName;
         this.roomName = meetingRoomName;
         this.status = status;
+        this.statusView = statusView;
     }
 
     public boolean getStatus() {
@@ -108,5 +109,18 @@ public class CommentDTO {
 
     public void setRoomName(String meetingRoomName) {
         this.roomName = meetingRoomName;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public boolean isStatusView() {
+        return statusView;
+    }
+
+
+    public void setStatusView(boolean statusView) {
+        this.statusView = statusView;
     }
 }

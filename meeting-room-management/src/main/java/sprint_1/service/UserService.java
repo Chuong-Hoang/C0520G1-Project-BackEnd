@@ -16,6 +16,13 @@ public interface UserService {
 
     boolean existsByUserName(String username);
 
+    Boolean existsByPassword(String password);
+
     void changePassWord(Long id, String password);
 
+    List<User> findUserByUserNameContainingAndDepartmentContaining(String userName, String department);
+
+    List<User> findUserByUserNameContaining(String userName);
+
+    List<User> findUserByDepartmentContaining(String department);
 }

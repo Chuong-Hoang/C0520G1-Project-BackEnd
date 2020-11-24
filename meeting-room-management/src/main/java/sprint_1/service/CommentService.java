@@ -15,4 +15,8 @@ public interface CommentService {
     void remove(Long id);
 
     List<Comment> findCommentByRoomName(String name);
+
+    List<Comment> findAllBySender(String name);
+
+    List<Comment> findAllByStatus(boolean status);
 }
