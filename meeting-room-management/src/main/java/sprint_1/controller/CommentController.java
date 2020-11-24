@@ -3,6 +3,8 @@ package sprint_1.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import sprint_1.dto.CommentDTO;
 import sprint_1.model.Comment;
@@ -92,40 +94,50 @@ public class CommentController {
         }
 
 // (3) convert commentDTO
-        List<CommentDTO> commentList1 = new ArrayList<>();
+        List<CommentDTO> commentListDTO = new ArrayList<>();
         for (Comment commentLists : commentList) {
                 if (commentLists.getReplier() == null) {
-                    commentList1.add(new CommentDTO(commentLists.getIdComment(), commentLists.getSender().getFullName(), commentLists.getCommentTime(), "N/A",
+                    commentListDTO.add(new CommentDTO(commentLists.getIdComment(), commentLists.getSender().getFullName(), commentLists.getCommentTime(), "N/A",
                             commentLists.getContentComment(), "N/A", commentLists.getErrorType().getErrorTypeName(),
                             commentLists.getMeetingRoom().getRoomName(), commentLists.isStatus(),commentLists.isStatusView()));
                 } else {
-                    commentList1.add(new CommentDTO(commentLists.getIdComment(), commentLists.getSender().getFullName(),
+                    commentListDTO.add(new CommentDTO(commentLists.getIdComment(), commentLists.getSender().getFullName(),
                             commentLists.getCommentTime(), commentLists.getContentReply(),
                             commentLists.getContentComment(), commentLists.getReplier().getFullName(), commentLists.getErrorType()
                             .getErrorTypeName(), commentLists.getMeetingRoom().getRoomName(), commentLists.isStatus(),commentLists.isStatusView()));
 
                 }
             }
-        if (commentList1.isEmpty()) {
+        if (commentListDTO.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(commentList1, HttpStatus.OK);
+        return new ResponseEntity<>(commentListDTO, HttpStatus.OK);
     }
 
     @GetMapping("/comment/{idComment}")
     public ResponseEntity<CommentDTO> findCommentById(@PathVariable Long idComment) {
-        CommentDTO commentDTO;
-        Comment comment = commentService.findById(idComment);
-        commentDTO = new CommentDTO(comment.getIdComment(), comment.getSender().getFullName(), comment.getCommentTime(), "N/A",
-                comment.getContentComment(), "N/A", comment.getErrorType().getErrorTypeName(),
-                comment.getMeetingRoom().getRoomName(), comment.isStatus(),comment.isStatusView());
 
+        Comment comment = commentService.findById(idComment);
+        CommentDTO commentDTO;
+        if (comment.getReplier() == null) {
+            commentDTO = new CommentDTO(comment.getIdComment(), comment.getSender().getFullName(), comment.getCommentTime(), comment.getContentReply(),
+                    comment.getContentComment(), "N/A", comment.getErrorType().getErrorTypeName(),
+                    comment.getMeetingRoom().getRoomName(), comment.isStatus(),comment.isStatusView());
+        } else {
+            commentDTO = new CommentDTO(comment.getIdComment(), comment.getSender().getFullName(), comment.getCommentTime(), comment.getContentReply(),
+                    comment.getContentComment(), comment.getReplier().getFullName(), comment.getErrorType().getErrorTypeName(),
+                    comment.getMeetingRoom().getRoomName(), comment.isStatus(), comment.isStatusView());
+        }
         return new ResponseEntity<>(commentDTO, HttpStatus.OK);
     }
 
 
     @PostMapping("/comment")
-    public ResponseEntity<Void> addComment(@RequestBody CommentDTO commentDTO) {
+    public ResponseEntity<Void> addComment(@Validated @RequestBody CommentDTO commentDTO , BindingResult bindingResult) {
+        if (bindingResult.hasErrors()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        else {
         Comment comment = new Comment();
         comment.setCommentTime(String.valueOf(LocalDate.now()));
         comment.setContentComment(commentDTO.getContentComment());
@@ -136,7 +148,7 @@ public class CommentController {
         comment.setReplier(null);
         comment.setContentReply(null);
         commentService.save(comment);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);}
     }
 
     @PutMapping("/comment/{idComment}")
