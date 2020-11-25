@@ -17,9 +17,16 @@ public interface BookedRoomService {
     void deleteById(Long id);
 
     List<BookedRoom> searchTime( String startDate, String endDate) throws ParseException;
+
     int totalUse(String a);
+
+    boolean validateDate(String a , String b);
+
     List<BookedRoom> findAllByMeetingRoom_RoomName(String roomName);
+
     List<BookedRoom> findAllByMonth(String month);
+
     List<BookedRoom> findAllByYear(String yaer);
-    public double compareEffective(String startDate, String endDate, Long startTime, Long endTime);
+
+    double compareEffective(String startDate, String endDate, Long startTime, Long endTime);
 }

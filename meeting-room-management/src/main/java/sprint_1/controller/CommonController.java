@@ -25,7 +25,7 @@ public class CommonController {
 
     @Autowired
     private RoomStatusService roomStatusService;
-    
+
     @Autowired
     private TimeFrameService timeFrameService;
 

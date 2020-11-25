@@ -2,6 +2,8 @@ package sprint_1.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import sprint_1.dto.CommentDTO;
 import sprint_1.model.Comment;
@@ -53,7 +55,7 @@ public class CommentController {
     }
 
     @GetMapping("/comment/search")
-    public ResponseEntity<List<CommentDTO>> findCommentByRoomName(@RequestParam("value1") String a, @RequestParam("value2") String b, @RequestParam("value3") boolean c) {
+    public ResponseEntity<List<CommentDTO>> findCommentByRoomName(@RequestParam("value1") String userNameSearch, @RequestParam("value2") String roomNameSearch, @RequestParam("value3") boolean statusSearch) {
         List<Comment> listAll = commentService.findAll();
         List<Comment> commentListUserName ;
         if (listAll.isEmpty()) {
@@ -61,81 +63,71 @@ public class CommentController {
         }
 
 // (1) search by userName
-        if ("".equals(a)){
+        if ("".equals(userNameSearch)){
             commentListUserName = listAll;
         } else {
-           commentListUserName = commentService.findAllBySender(a);
+           commentListUserName = commentService.findAllBySender(userNameSearch);
         }
 
 // (2) search by roomName
         List<Comment> commentListRoomName = new ArrayList<>();
-        if ("".equals(b)){
+        if ("".equals(roomNameSearch)){
             commentListRoomName = commentListUserName;
         } else {
             for (Comment room: commentListUserName ){
-                if ((room.getMeetingRoom().getRoomName().toLowerCase()).contains(b.toLowerCase())){
+                if ((room.getMeetingRoom().getRoomName().toLowerCase()).contains(roomNameSearch.toLowerCase())){
                     commentListRoomName.add(room);
                 }
             }
         }
 // (3) search by status
         List<Comment> commentList = new ArrayList<>();
-        if (!c){
+        if (!statusSearch){
             commentList = commentListRoomName;
         } else {
             for (Comment room: commentListRoomName ){
-                if (c == room.isStatus()){
+                if (statusSearch == room.isStatus()){
                     commentList.add(room);
                 }
             }
         }
 
 // (3) convert commentDTO
-        List<CommentDTO> commentList1 = new ArrayList<>();
+        List<CommentDTO> commentListDTO = new ArrayList<>();
         for (Comment commentLists : commentList) {
                 if (commentLists.getReplier() == null) {
-                    commentList1.add(new CommentDTO(commentLists.getIdComment(), commentLists.getSender().getFullName(), commentLists.getCommentTime(), "N/A",
+                    commentListDTO.add(new CommentDTO(commentLists.getIdComment(), commentLists.getSender().getFullName(), commentLists.getCommentTime(), "N/A",
                             commentLists.getContentComment(), "N/A", commentLists.getErrorType().getErrorTypeName(),
                             commentLists.getMeetingRoom().getRoomName(), commentLists.isStatus(),commentLists.isStatusView()));
                 } else {
-                    commentList1.add(new CommentDTO(commentLists.getIdComment(), commentLists.getSender().getFullName(),
+                    commentListDTO.add(new CommentDTO(commentLists.getIdComment(), commentLists.getSender().getFullName(),
                             commentLists.getCommentTime(), commentLists.getContentReply(),
                             commentLists.getContentComment(), commentLists.getReplier().getFullName(), commentLists.getErrorType()
                             .getErrorTypeName(), commentLists.getMeetingRoom().getRoomName(), commentLists.isStatus(),commentLists.isStatusView()));
 
                 }
             }
-        if (commentList1.isEmpty()) {
+        if (commentListDTO.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(commentList1, HttpStatus.OK);
+        return new ResponseEntity<>(commentListDTO, HttpStatus.OK);
     }
 
     @GetMapping("/comment/{idComment}")
     public ResponseEntity<CommentDTO> findCommentById(@PathVariable Long idComment) {
-        CommentDTO commentDTO;
+
         Comment comment = commentService.findById(idComment);
-        commentDTO = new CommentDTO(comment.getIdComment(), comment.getSender().getFullName(), comment.getCommentTime(), "N/A",
-                comment.getContentComment(), "N/A", comment.getErrorType().getErrorTypeName(),
-                comment.getMeetingRoom().getRoomName(), comment.isStatus(),comment.isStatusView());
-
+        CommentDTO commentDTO;
+        if (comment.getReplier() == null) {
+            commentDTO = new CommentDTO(comment.getIdComment(), comment.getSender().getFullName(), comment.getCommentTime(), comment.getContentReply(),
+                    comment.getContentComment(), "N/A", comment.getErrorType().getErrorTypeName(),
+                    comment.getMeetingRoom().getRoomName(), comment.isStatus(),comment.isStatusView());
+        } else {
+            commentDTO = new CommentDTO(comment.getIdComment(), comment.getSender().getFullName(), comment.getCommentTime(), comment.getContentReply(),
+                    comment.getContentComment(), comment.getReplier().getFullName(), comment.getErrorType().getErrorTypeName(),
+                    comment.getMeetingRoom().getRoomName(), comment.isStatus(), comment.isStatusView());
+        }
         return new ResponseEntity<>(commentDTO, HttpStatus.OK);
-    }
-
-
-    @PostMapping("/comment")
-    public ResponseEntity<Void> addComment(@RequestBody CommentDTO commentDTO) {
-        Comment comment = new Comment();
-        comment.setCommentTime(String.valueOf(LocalDate.now()));
-        comment.setContentComment(commentDTO.getContentComment());
-        comment.setStatus(true);
-        comment.setSender(userService.findById((long) 1));
-        comment.setMeetingRoom(meetingRoomService.findByRoomName(commentDTO.getRoomName()));
-        comment.setErrorType(errorTypeService.findByErrorTypeName(commentDTO.getErrorTypeName()));
-        comment.setReplier(null);
-        comment.setContentReply(null);
-        commentService.save(comment);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/comment/{idComment}")
@@ -154,10 +146,30 @@ public class CommentController {
         commentService.save(comment);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    @DeleteMapping("/comment/{id}")
+
+    @DeleteMapping("/comment/delete/{id}")
     public ResponseEntity<Void> deleteComment(@PathVariable Long id){
         Comment comment= commentService.findById(id);
         commentService.remove(id);
         return new ResponseEntity(comment, HttpStatus.OK);
+    }
+
+    @PostMapping("/comment/create")
+    public ResponseEntity<Void> addComment(@Validated @RequestBody CommentDTO commentDTO , BindingResult bindingResult) {
+        if (bindingResult.hasErrors()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        else {
+            Comment comment = new Comment();
+            comment.setCommentTime(String.valueOf(LocalDate.now()));
+            comment.setContentComment(commentDTO.getContentComment());
+            comment.setStatus(true);
+            comment.setSender(userService.findById((long) 1));
+            comment.setMeetingRoom(meetingRoomService.findByRoomName(commentDTO.getRoomName()));
+            comment.setErrorType(errorTypeService.findByErrorTypeName(commentDTO.getErrorTypeName()));
+            comment.setReplier(null);
+            comment.setContentReply(null);
+            commentService.save(comment);
+            return new ResponseEntity<>(HttpStatus.OK);}
     }
 }

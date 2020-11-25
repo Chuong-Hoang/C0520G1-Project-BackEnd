@@ -4,22 +4,19 @@ public class MeetingRoomSearchDTO {
     private String roomName;
 
     private String floor;
-
     private String zone;
-
     private String capacity;
-
     private String roomTypeName;
-
     private String roomStatusName;
-
     private String roomAsset;
-
     private String startDate;
     private String endDate;
     private String startTime;
     private String endTime;
 
+    public MeetingRoomSearchDTO() {
+    }
+  
     public String getStartDate() {
         return startDate;
     }

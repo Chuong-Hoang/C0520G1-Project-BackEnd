@@ -40,6 +40,7 @@ public class BookedRoomController {
         }
         for (BookedRoom room : list){
             bookedRoomDTO = new BookedRoomDTO();
+            bookedRoomDTO.setIdBookedRoom(room.getIdBookedRoom());
             bookedRoomDTO.setMeetingRoomName(room.getMeetingRoom().getRoomName());
             bookedRoomDTO.setContent(room.getContent());
             bookedRoomDTO.setStartTime(room.getStartTime().getTimeValue());
@@ -234,8 +235,6 @@ public class BookedRoomController {
 //        return new ResponseEntity<>(meetingRoom, HttpStatus.OK);
 //    }
 
-
-
     @PostMapping("meeting-room-find") // list and search combined
     public ResponseEntity<List<MeetingRoom>> showMeetingRooms(@RequestBody MeetingRoomSearchDTO meetingRoomSearchDTO) throws Exception {
         // (*) find all
@@ -336,4 +335,40 @@ public class BookedRoomController {
         }
         return new ResponseEntity<>(listDateAndTimes, HttpStatus.OK);
     }
+
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<BookedRoom> deleteBookedRoom(@PathVariable Long id) {
+        BookedRoom bookedRoom = bookedRoomService.findById(id);
+        if (bookedRoom == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        bookedRoomService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("findBookedRoom/{id}")
+    public ResponseEntity<BookedRoomDTO> findRoomById(@PathVariable long id) {
+        BookedRoom bookedRoom = bookedRoomService.findById(id);
+        if (bookedRoom == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        BookedRoomDTO bookedRoomDTO = new BookedRoomDTO(
+                bookedRoom.getIdBookedRoom(),
+                bookedRoom.getStartDate(),
+                bookedRoom.getEndDate(),
+                bookedRoom.getContent(),
+                bookedRoom.getBookedDate(),
+                bookedRoom.getBookedStatus(),
+                bookedRoom.getStartTime().getIdTime(),
+                bookedRoom.getStartTime().getTimeValue(),
+                bookedRoom.getEndTime().getIdTime(),
+                bookedRoom.getEndTime().getTimeValue(),
+                bookedRoom.getBookedUser().getIdUser(),
+                bookedRoom.getMeetingRoom().getIdRoom(),
+                bookedRoom.getMeetingRoom().getRoomName(),
+                bookedRoom.getMeetingRoom().getRoomType().getRoomTypeName()
+        );
+        return new ResponseEntity<>(bookedRoomDTO, HttpStatus.OK);
+    }
+
 }

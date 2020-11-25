@@ -2,14 +2,26 @@ package sprint_1.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sprint_1.dto.UserManagerDTO;
 import sprint_1.model.User;
 import sprint_1.repository.UserRepository;
 import sprint_1.service.UserService;
 
 import java.util.List;
-import java.util.Optional;
 
+/**
+ * UserServiceImpl
+ * <p>
+ * Version 1.0
+ * <p>
+ * Date: 24-11-2020
+ * <p>
+ * Copyright
+ * <p>
+ * Modification Logs:
+ * DATE                 AUTHOR          DESCRIPTION
+ * -----------------------------------------------------------------------
+ * 22-11-2020         HienTH           CRUD
+ */
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
@@ -41,10 +53,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Boolean existsByPassword(String password) {
+        return userRepository.existsByPassword(password);
+    }
+
+    @Override
     public void changePassWord(Long id, String password) {
         User user = userRepository.findById(id).orElse(null);
-        user.setPassword(password);
-        userRepository.save(user);
+        if (user != null) {
+            user.setPassword(password);
+            userRepository.save(user);
+        }
     }
 
     @Override

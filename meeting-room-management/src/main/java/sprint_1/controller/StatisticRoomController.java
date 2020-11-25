@@ -1,13 +1,12 @@
 package sprint_1.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import sprint_1.dto.BookedChartDTO;
 import sprint_1.dto.BookedRoomDTOList;
 import sprint_1.model.BookedRoom;
@@ -16,6 +15,7 @@ import sprint_1.service.BookedRoomService;
 import sprint_1.service.MeetingRoomService;
 import sprint_1.service.RoomTypeService;
 
+import javax.naming.AuthenticationException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,7 @@ public class StatisticRoomController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             for (BookedRoom a : bookedRoomList) {
-                bookedRoomDTOLists.add(new BookedRoomDTOList(a.getIdBookedRoom(), a.getStartDate(), a.getEndDate(), a.getContent(), a.getBookedDate(), a.getBookedStatus(), bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime()),bookedRoomService.totalUse(a.getMeetingRoom().getRoomName()), a.getStartTime().getTimeValue(), a.getEndTime().getTimeValue(), a.getBookedUser().getUserName(), a.getMeetingRoom().getRoomName(), a.getMeetingRoom().getRoomType().getRoomTypeName()));
+                bookedRoomDTOLists.add(new BookedRoomDTOList(a.getIdBookedRoom(), a.getStartDate(), a.getEndDate(), a.getContent(), a.getBookedDate(), a.getBookedStatus(), bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime()), bookedRoomService.totalUse(a.getMeetingRoom().getRoomName()), a.getStartTime().getTimeValue(), a.getEndTime().getTimeValue(), a.getBookedUser().getUserName(), a.getMeetingRoom().getRoomName(), a.getMeetingRoom().getRoomType().getRoomTypeName()));
             }
         }
         return new ResponseEntity<>(bookedRoomDTOLists, HttpStatus.OK);
@@ -53,19 +53,23 @@ public class StatisticRoomController {
     public ResponseEntity<List<BookedRoomDTOList>> getListBookedRoomByTime(@RequestParam("param1") String startDate, @RequestParam("param2") String endDate) {
         List<BookedRoom> bookedRoomList = null;
         List<BookedRoomDTOList> bookedRoomDTOLists = new ArrayList<>();
-        try {
-            bookedRoomList = bookedRoomService.searchTime(startDate, endDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        assert bookedRoomList != null;
-        if (bookedRoomList.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            for (BookedRoom a : bookedRoomList) {
-                bookedRoomDTOLists.add(new BookedRoomDTOList(a.getIdBookedRoom(), a.getStartDate(), a.getEndDate(), a.getContent(), a.getBookedDate(), a.getBookedStatus(), bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime()),bookedRoomService.totalUse(a.getMeetingRoom().getRoomName()), a.getStartTime().getTimeValue(), a.getEndTime().getTimeValue(), a.getBookedUser().getUserName(), a.getMeetingRoom().getRoomName(), a.getMeetingRoom().getRoomType().getRoomTypeName()));
+        if (bookedRoomService.validateDate(startDate, endDate)) {
+            try {
+                bookedRoomList = bookedRoomService.searchTime(startDate, endDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
-            return new ResponseEntity<>(bookedRoomDTOLists, HttpStatus.OK);
+            assert bookedRoomList != null;
+            if (bookedRoomList.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            } else {
+                for (BookedRoom a : bookedRoomList) {
+                    bookedRoomDTOLists.add(new BookedRoomDTOList(a.getIdBookedRoom(), a.getStartDate(), a.getEndDate(), a.getContent(), a.getBookedDate(), a.getBookedStatus(), bookedRoomService.compareEffective(a.getStartDate(), a.getEndDate(), a.getStartTime().getIdTime(), a.getEndTime().getIdTime()), bookedRoomService.totalUse(a.getMeetingRoom().getRoomName()), a.getStartTime().getTimeValue(), a.getEndTime().getTimeValue(), a.getBookedUser().getUserName(), a.getMeetingRoom().getRoomName(), a.getMeetingRoom().getRoomType().getRoomTypeName()));
+                }
+                return new ResponseEntity<>(bookedRoomDTOLists, HttpStatus.OK);
+            }
+        }else {
+            return null;
         }
     }
 
@@ -124,7 +128,7 @@ public class StatisticRoomController {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {
                 for (BookedRoom b : listYear) {
-                    bookedRoomDTOLists.add(new BookedRoomDTOList(b.getIdBookedRoom(), b.getStartDate(), b.getEndDate(), b.getContent(), b.getBookedDate(), b.getBookedStatus(), bookedRoomService.compareEffective(b.getStartDate(), b.getEndDate(), b.getStartTime().getIdTime(), b.getEndTime().getIdTime()),bookedRoomService.totalUse(b.getMeetingRoom().getRoomName()), b.getStartTime().getTimeValue(), b.getEndTime().getTimeValue(), b.getBookedUser().getUserName(), b.getMeetingRoom().getRoomName(), b.getMeetingRoom().getRoomType().getRoomTypeName()));
+                    bookedRoomDTOLists.add(new BookedRoomDTOList(b.getIdBookedRoom(), b.getStartDate(), b.getEndDate(), b.getContent(), b.getBookedDate(), b.getBookedStatus(), bookedRoomService.compareEffective(b.getStartDate(), b.getEndDate(), b.getStartTime().getIdTime(), b.getEndTime().getIdTime()), bookedRoomService.totalUse(b.getMeetingRoom().getRoomName()), b.getStartTime().getTimeValue(), b.getEndTime().getTimeValue(), b.getBookedUser().getUserName(), b.getMeetingRoom().getRoomName(), b.getMeetingRoom().getRoomType().getRoomTypeName()));
                 }
                 return new ResponseEntity<>(bookedRoomDTOLists, HttpStatus.OK);
             }
