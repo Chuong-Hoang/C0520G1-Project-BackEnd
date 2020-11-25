@@ -131,26 +131,6 @@ public class CommentController {
         return new ResponseEntity<>(commentDTO, HttpStatus.OK);
     }
 
-
-    @PostMapping("/comment/create")
-    public ResponseEntity<Void> addComment(@Validated @RequestBody CommentDTO commentDTO , BindingResult bindingResult) {
-        if (bindingResult.hasErrors()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        else {
-        Comment comment = new Comment();
-        comment.setCommentTime(String.valueOf(LocalDate.now()));
-        comment.setContentComment(commentDTO.getContentComment());
-        comment.setStatus(true);
-        comment.setSender(userService.findById((long) 1));
-        comment.setMeetingRoom(meetingRoomService.findByRoomName(commentDTO.getRoomName()));
-        comment.setErrorType(errorTypeService.findByErrorTypeName(commentDTO.getErrorTypeName()));
-        comment.setReplier(null);
-        comment.setContentReply(null);
-        commentService.save(comment);
-        return new ResponseEntity<>(HttpStatus.OK);}
-    }
-
     @PutMapping("/comment/{idComment}")
     public ResponseEntity<Void> addCommentHandle(@PathVariable Long idComment, @RequestBody CommentDTO commentDTO) {
         Comment comment = commentService.findById(idComment);
@@ -167,10 +147,30 @@ public class CommentController {
         commentService.save(comment);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    @DeleteMapping("/comment/{id}")
+
+    @DeleteMapping("/comment/delete/{id}")
     public ResponseEntity<Void> deleteComment(@PathVariable Long id){
         Comment comment= commentService.findById(id);
         commentService.remove(id);
         return new ResponseEntity(comment, HttpStatus.OK);
+    }
+
+    @PostMapping("/comment/create")
+    public ResponseEntity<Void> addComment(@Validated @RequestBody CommentDTO commentDTO , BindingResult bindingResult) {
+        if (bindingResult.hasErrors()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        else {
+            Comment comment = new Comment();
+            comment.setCommentTime(String.valueOf(LocalDate.now()));
+            comment.setContentComment(commentDTO.getContentComment());
+            comment.setStatus(true);
+            comment.setSender(userService.findById((long) 1));
+            comment.setMeetingRoom(meetingRoomService.findByRoomName(commentDTO.getRoomName()));
+            comment.setErrorType(errorTypeService.findByErrorTypeName(commentDTO.getErrorTypeName()));
+            comment.setReplier(null);
+            comment.setContentReply(null);
+            commentService.save(comment);
+            return new ResponseEntity<>(HttpStatus.OK);}
     }
 }
