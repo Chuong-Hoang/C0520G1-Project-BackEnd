@@ -27,7 +27,19 @@ public class ChangePasswordDTO {
     @NotEmpty(message = "Vui lòng nhập mật khẩu")
     @Pattern(regexp = "^[a-z0-9]{6,30}$", message = "Mật khẩu không hợp lệ")
     private String newPassword;
-//    private String message;
+
+    private String message;
+
+    public ChangePasswordDTO(long id, String userName, String oldPassword, String newPassword) {
+        this.id = id;
+        this.userName = userName;
+        this.oldPassword = oldPassword;
+        this.newPassword = newPassword;
+    }
+
+    public ChangePasswordDTO( String message) {
+        this.message = message;
+    }
 
     public long getId() {
         return id;
@@ -61,11 +73,11 @@ public class ChangePasswordDTO {
         this.newPassword = newPassword;
     }
 
-//    public String getMessage() {
-//        return message;
-//    }
-//
-//    public void setMessage(String message) {
-//        this.message = message;
-//    }
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }

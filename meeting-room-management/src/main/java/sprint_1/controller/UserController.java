@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -154,18 +155,17 @@ public class UserController {
     public ResponseEntity<?> changePassWordUser(@Validated @RequestBody ChangePasswordDTO changePasswordDTO,
                                                 @PathVariable("id") long id, BindingResult bindingResult) {
         User user = userService.findById(id);
+        List<ChangePasswordDTO> errorsList = new ArrayList<>();
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-//        if (userService.existsByPassword(changePasswordDTO.getOldPassword())) {
-//            userService.changePassWord(id, changePasswordDTO.getNewPassword());
-//            return new ResponseEntity<>(HttpStatus.OK);
-//        }
-//        if (bindingResult.hasErrors()) {
-//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//        }
-        userService.changePassWord(id, passwordEncoder.encode(changePasswordDTO.getNewPassword()));
-        return new ResponseEntity<>(HttpStatus.OK);
+        if (BCrypt.checkpw(changePasswordDTO.getOldPassword(), user.getPassword())) {
+            userService.changePassWord(id, passwordEncoder.encode(changePasswordDTO.getNewPassword()));
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else{
+            errorsList.add(new ChangePasswordDTO("Mật khẩu không chính xác"));
+            return new ResponseEntity<>(errorsList, HttpStatus.OK);
+        }
     }
 
     /**
