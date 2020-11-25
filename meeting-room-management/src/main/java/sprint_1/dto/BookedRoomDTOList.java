@@ -1,19 +1,13 @@
 package sprint_1.dto;
 
-/**
- * class BookedRoomDTOList
- * <p>
- * Version 1.0
- * <p>
- * Date: 24/11/2020
- * <p>
- * Copyright
- * <p>
- * Modification Logs:
- * DATE                 AUTHOR          DESCRIPTION
- * -----------------------------------------------------------------------
- * 24/11/2020        Nguyễn Tiến Hải           class
- */
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import sprint_1.model.MeetingRoom;
+import sprint_1.model.TimeFrame;
+import sprint_1.model.User;
+
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 public class BookedRoomDTOList {
     private Long idBookedRoom;
     private String startDate;

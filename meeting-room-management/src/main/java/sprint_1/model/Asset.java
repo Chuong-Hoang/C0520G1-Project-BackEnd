@@ -14,7 +14,7 @@ import java.util.Collection;
  *
  * Modification Logs:
  * DATE                 AUTHOR          DESCRIPTION
- * ----------------------------------------------------------
+ * -----------------------------------------------------------------------
  * 21-11-2020         TungTS            Create Class Model
  */
 
