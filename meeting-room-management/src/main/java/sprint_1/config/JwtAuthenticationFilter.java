@@ -16,6 +16,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * JwtAuthenticationFilter
+ *
+ * Version 1.0
+ *
+ * Date: 24/11/2020
+ *
+ * Copyright
+ *
+ * Author: Le Toan
+ */
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
@@ -25,6 +36,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
+    /**
+     * from JWT from request, process check token and set UserDetails in SecurityContext
+     * @param request from client
+     * @param response reply for client
+     * @param filterChain
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
@@ -47,6 +66,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
+    /**
+     * get token from request send by client
+     * @param request sent by client
+     * @return token got from field Authorization of header
+     */
     private String getJwtFromRequest(HttpServletRequest request) {
         String headerAuth = request.getHeader("Authorization");
 

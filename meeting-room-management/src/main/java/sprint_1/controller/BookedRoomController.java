@@ -543,4 +543,40 @@ public class BookedRoomController {
         }
         return new ResponseEntity<>(assetDTOList, HttpStatus.OK);
     }
+
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<BookedRoom> deleteBookedRoom(@PathVariable Long id) {
+        BookedRoom bookedRoom = bookedRoomService.findById(id);
+        if (bookedRoom == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        bookedRoomService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("findBookedRoom/{id}")
+    public ResponseEntity<BookedRoomDTO> findRoomById(@PathVariable long id) {
+        BookedRoom bookedRoom = bookedRoomService.findById(id);
+        if (bookedRoom == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        BookedRoomDTO bookedRoomDTO = new BookedRoomDTO(
+                bookedRoom.getIdBookedRoom(),
+                bookedRoom.getStartDate(),
+                bookedRoom.getEndDate(),
+                bookedRoom.getContent(),
+                bookedRoom.getBookedDate(),
+                bookedRoom.getBookedStatus(),
+                bookedRoom.getStartTime().getIdTime(),
+                bookedRoom.getStartTime().getTimeValue(),
+                bookedRoom.getEndTime().getIdTime(),
+                bookedRoom.getEndTime().getTimeValue(),
+                bookedRoom.getBookedUser().getIdUser(),
+                bookedRoom.getMeetingRoom().getIdRoom(),
+                bookedRoom.getMeetingRoom().getRoomName(),
+                bookedRoom.getMeetingRoom().getRoomType().getRoomTypeName()
+        );
+        return new ResponseEntity<>(bookedRoomDTO, HttpStatus.OK);
+    }
+
 }

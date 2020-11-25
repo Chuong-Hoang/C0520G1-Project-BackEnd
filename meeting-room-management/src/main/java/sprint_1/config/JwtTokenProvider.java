@@ -9,6 +9,17 @@ import sprint_1.model.UserDetailsImpl;
 
 import java.util.Date;
 
+/**
+ * JwtTokenProvider
+ *
+ * Version 1.0
+ *
+ * Date: 24/11/2020
+ *
+ * Copyright
+ *
+ * Author: Le Toan
+ */
 @Component
 public class JwtTokenProvider {
     private static final Logger log = LoggerFactory.getLogger(JwtTokenProvider.class.getName());
@@ -19,6 +30,11 @@ public class JwtTokenProvider {
     //Time life of jwt (1 week)
     private final long JWT_EXPIRATION = 604800000L;
 
+    /**
+     * create token when user login successful
+     * @param authentication get information of principal
+     * @return token
+     */
     //create jwt from user information
     public String generateJwtToken(Authentication authentication) {
 
@@ -34,11 +50,21 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    /**
+     * get user's information via token on header of request
+     * @param token token sent by user
+     * @return user's information
+     */
     //get user information from jwt
     public String getUserNameFromJwtToken(String token) {
         return Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token).getBody().getSubject();
     }
 
+    /**
+     * check token sent by user and token in server is same ?
+     * @param authToken token sent by user
+     * @return true is same, false is not same
+     */
     public boolean validateToken(String authToken) {
         try {
             Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(authToken);

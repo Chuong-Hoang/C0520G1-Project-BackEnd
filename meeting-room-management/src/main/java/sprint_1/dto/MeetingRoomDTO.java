@@ -1,17 +1,22 @@
 package sprint_1.dto;
-
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.util.List;
 
 public class MeetingRoomDTO {
 
     private Long idRoom;
 
+    @Pattern(regexp = "^[a-zA-Z0-9 ]{1,30}$",message = "Tên phòng từ 1 đến 30 ký tự")
     private String roomName;
 
+    @Pattern(regexp = "^^[0-9]{0,20}$",message = "Số tầng phải là số nguyên dương")
     private String floor;
 
+    @NotBlank
     private String zone;
 
+    @Pattern(regexp = "^^[0-9]{0,20}$",message = "Sức chứa phải là số nguyên dương")
     private String capacity;
 
     private String image;
@@ -20,6 +25,7 @@ public class MeetingRoomDTO {
 
     private String endDate;
 
+    @NotBlank
     private String roomTypeName;
 
     private String roomStatusName;
@@ -55,7 +61,6 @@ public class MeetingRoomDTO {
 
     public MeetingRoomDTO() {
     }
-
 
     public List<AssetDetailDTO> getAsset() {
         return asset;
@@ -144,4 +149,5 @@ public class MeetingRoomDTO {
     public void setRoomStatusName(String roomStatusName) {
         this.roomStatusName = roomStatusName;
     }
+
 }

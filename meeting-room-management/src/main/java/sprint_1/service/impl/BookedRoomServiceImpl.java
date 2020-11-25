@@ -66,6 +66,15 @@ public class BookedRoomServiceImpl implements BookedRoomService {
         return count;
     }
 
+    @Override
+    public boolean validateDate(String startDate, String endDate) {
+        String[] date1 = startDate.split("-");
+        String[] date2 = endDate.split("-");
+        double a = Double.parseDouble(date2[0]) - Double.parseDouble(date1[0]);
+        double b = Double.parseDouble(date2[1]) - Double.parseDouble(date1[1]);
+        double c = Double.parseDouble(date2[2]) - Double.parseDouble(date1[2]);
+        return a + b + c > 0;
+    }
 
     @Override
     public List<BookedRoom> findAllByMeetingRoom_RoomName(String roomName) {

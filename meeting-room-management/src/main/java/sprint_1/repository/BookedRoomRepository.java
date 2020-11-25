@@ -7,5 +7,4 @@ import java.util.List;
 
 public interface BookedRoomRepository extends JpaRepository<BookedRoom, Long> {
     List<BookedRoom> findAllByMeetingRoom_RoomName(String roomName);
-
 }
