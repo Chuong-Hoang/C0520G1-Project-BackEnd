@@ -137,7 +137,7 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         user.setUserName(userManagerDTO.getUserName());
-        user.setPassword(passwordEncoder.encode(userManagerDTO.getPassword()));
+        user.setPassword(passwordEncoder.encode(userManagerDTO.getNewPassword()));
         user.setFullName(userManagerDTO.getFullName());
         user.setDepartment(userManagerDTO.getDepartment());
         user.setRole(roleService.findByRoleName(userManagerDTO.getRoleName()));
@@ -162,7 +162,7 @@ public class UserController {
         if (BCrypt.checkpw(changePasswordDTO.getOldPassword(), user.getPassword())) {
             userService.changePassWord(id, passwordEncoder.encode(changePasswordDTO.getNewPassword()));
             return new ResponseEntity<>(HttpStatus.OK);
-        } else{
+        } else {
             errorsList.add(new ChangePasswordDTO("Mật khẩu không chính xác"));
             return new ResponseEntity<>(errorsList, HttpStatus.OK);
         }
