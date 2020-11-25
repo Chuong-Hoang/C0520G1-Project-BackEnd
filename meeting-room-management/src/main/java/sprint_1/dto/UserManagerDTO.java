@@ -51,6 +51,10 @@ public class UserManagerDTO {
     @NotEmpty(message = "Vui lòng chọn quyền", groups = checkEdit.class)
     private String roleName;
 
+    @NotEmpty(message = "Vui lòng nhập mật khẩu", groups = checkEdit.class)
+    @Pattern(regexp = "^[a-z0-9]{6,30}$", message = "Mật khẩu không hợp lệ", groups = checkEdit.class)
+    private String newPassword;
+
     public UserManagerDTO() {
     }
 
@@ -64,7 +68,7 @@ public class UserManagerDTO {
 
     public UserManagerDTO(String userName, String password, String fullName, String department, String roleName) {
         this.userName = userName;
-        this.password = password;
+        this.newPassword = password;
         this.fullName = fullName;
         this.department = department;
         this.roleName = roleName;
@@ -116,5 +120,13 @@ public class UserManagerDTO {
 
     public void setRoleName(String roleName) {
         this.roleName = roleName;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
     }
 }
