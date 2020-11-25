@@ -2,14 +2,15 @@ package sprint_1.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sprint_1.dto.BookedChartDTO;
 import sprint_1.model.BookedRoom;
-import sprint_1.model.MeetingRoom;
 import sprint_1.repository.BookedRoomRepository;
 import sprint_1.service.BookedRoomService;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -37,6 +38,12 @@ public class BookedRoomServiceImpl implements BookedRoomService {
         bookedRoomRepository.deleteById(id);
     }
 
+    /**
+     * total use room
+     * create Nguyen Tien Hai
+     * @param startDate, endDate
+     * @return  int
+     */
     @Override
     public List<BookedRoom> searchTime(String startDate, String endDate) throws ParseException {
         List<BookedRoom> resultSearchTime = new ArrayList<>();
@@ -66,21 +73,37 @@ public class BookedRoomServiceImpl implements BookedRoomService {
         return count;
     }
 
+    /**
+     * validate Date
+     * create Nguyen Tien Hai
+     *@param startDate, endDate
+     * @return  boolean
+     */
     @Override
     public boolean validateDate(String startDate, String endDate) {
         String[] date1 = startDate.split("-");
         String[] date2 = endDate.split("-");
-        double a = Double.parseDouble(date2[0]) - Double.parseDouble(date1[0]);
-        double b = Double.parseDouble(date2[1]) - Double.parseDouble(date1[1]);
-        double c = Double.parseDouble(date2[2]) - Double.parseDouble(date1[2]);
-        return a + b + c > 0;
+        final long daysElapsed = ChronoUnit.DAYS.between(LocalDate.of(Integer.parseInt(date1[0]), Integer.parseInt(date1[1]), Integer.parseInt(date1[2])), LocalDate.of(Integer.parseInt(date2[0]), Integer.parseInt(date2[1]), Integer.parseInt(date2[2])));
+        return daysElapsed >0;
     }
 
+    /**
+     * find BookedRoom by room name
+     * create Nguyen Tien Hai
+     *@param  roomName
+     * @return list BookedRoom
+     */
     @Override
     public List<BookedRoom> findAllByMeetingRoom_RoomName(String roomName) {
         return bookedRoomRepository.findAllByMeetingRoom_RoomName(roomName);
     }
 
+    /**
+     * find BookedRoom by month
+     * create Nguyen Tien Hai
+     *@param month
+     * @return list BookedRoom
+     */
     @Override
     public List<BookedRoom> findAllByMonth(String month) {
         List<BookedRoom> monthLists = new ArrayList<>();
@@ -93,26 +116,39 @@ public class BookedRoomServiceImpl implements BookedRoomService {
         return monthLists;
     }
 
+    /**
+     * find BookedRoom by year
+     * create Nguyen Tien Hai
+     * @param year
+     * @return list BookedRoom
+     */
     @Override
-    public List<BookedRoom> findAllByYear(String yaer) {
+    public List<BookedRoom> findAllByYear(String year) {
         List<BookedRoom> yearLists = new ArrayList<>();
         for (int i = 0; i < bookedRoomRepository.findAll().size(); i++) {
             String[] date = bookedRoomRepository.findAll().get(i).getStartDate().split("-");
-            if (yaer.equals(date[0])) {
+            if (year.equals(date[0])) {
                 yearLists.add(bookedRoomRepository.findAll().get(i));
             }
         }
         return yearLists;
     }
 
+
+    /**
+     * compare Effective by room
+     * create Nguyen Tien Hai
+     *  @param startDate, endDate, startTime, endTime
+     * @return double
+     */
     @Override
     public double compareEffective(String startDate, String endDate, Long startTime, Long endTime) {
         String[] date1 = startDate.split("-");
         String[] date2 = endDate.split("-");
-        double a = Double.parseDouble(date2[0]) - Double.parseDouble(date1[0]);
-        double b = Double.parseDouble(date2[1]) - Double.parseDouble(date1[1]);
-        double c = Double.parseDouble(date2[2]) - Double.parseDouble(date1[2]);
-
-        return (((endTime - startTime) * 0.5) / ((a + b + c) * 8)) * 100;
+        long daysElapsed = ChronoUnit.DAYS.between(LocalDate.of(Integer.parseInt(date1[0]), Integer.parseInt(date1[1]), Integer.parseInt(date1[2])), LocalDate.of(Integer.parseInt(date2[0]), Integer.parseInt(date2[1]), Integer.parseInt(date2[2])));
+        if(daysElapsed == 0){
+            daysElapsed = 1;
+        }
+        return (((((endTime - startTime) * 0.5) / (daysElapsed * 8))) * 100);
     }
 }
