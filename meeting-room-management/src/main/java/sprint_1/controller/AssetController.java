@@ -11,6 +11,7 @@ import sprint_1.model.Asset;
 import sprint_1.model.AssetDetail;
 import sprint_1.service.AssetDetailService;
 import sprint_1.service.AssetService;
+
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +26,9 @@ import java.util.List;
  * Copyright
  * <p>
  * Modification Logs:
- * DATE                 AUTHOR
- * ----------------------------
- * 22-11-2020         TungTS
+ * DATE                 AUTHOR          DESCRIPTION
+ * -----------------------------------------------------------------------
+ * 22-11-2020         TungTS            CRUD
  */
 
 @RestController
@@ -144,6 +145,7 @@ public class AssetController {
         System.err.println("Updating " + id);
         Asset asset = assetService.findById(id);
         if (asset == null) {
+            System.out.println("id " + id + " not found");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         asset.setAssetName(assetDTO.getAssetName());
