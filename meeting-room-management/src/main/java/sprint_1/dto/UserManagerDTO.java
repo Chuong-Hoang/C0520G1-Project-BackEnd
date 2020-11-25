@@ -19,10 +19,12 @@ import javax.validation.constraints.Size;
 public class UserManagerDTO {
     public interface checkCreate {
     }
-    ;
+
     public interface checkEdit {
     }
-    ;
+
+    public interface checkNewPassword {
+    }
     private long id;
     @NotEmpty(message = "Vui lòng nhập tên đăng nhập", groups = checkCreate.class)
     @Pattern(regexp = "^[a-z0-9]{3,30}$", message = "Tên đăng nhập không hợp lệ", groups = checkCreate.class)
@@ -38,8 +40,9 @@ public class UserManagerDTO {
     private String department;
     @NotEmpty(message = "Vui lòng chọn quyền", groups = checkEdit.class)
     private String roleName;
-    @NotEmpty(message = "Vui lòng nhập mật khẩu", groups = checkEdit.class)
-    @Pattern(regexp = "^[a-z0-9]{6,30}$", message = "Mật khẩu không hợp lệ", groups = checkEdit.class)
+
+    @NotEmpty(message = "Vui lòng nhập mật khẩu", groups = checkNewPassword.class)
+    @Pattern(regexp = "^[a-z0-9]{6,30}$", message = "Mật khẩu không hợp lệ", groups = checkNewPassword.class)
     private String newPassword;
     public UserManagerDTO() {
     }
@@ -50,9 +53,19 @@ public class UserManagerDTO {
         this.department = department;
         this.roleName = roleName;
     }
+
+    public UserManagerDTO(long id, String userName, String newPassword, String fullName, String department, String roleName) {
+        this.id = id;
+        this.userName = userName;
+        this.newPassword = newPassword;
+        this.fullName = fullName;
+        this.department = department;
+        this.roleName = roleName;
+    }
+
     public UserManagerDTO(String userName, String password, String fullName, String department, String roleName) {
         this.userName = userName;
-        this.newPassword = password;
+        this.password = password;
         this.fullName = fullName;
         this.department = department;
         this.roleName = roleName;
@@ -99,4 +112,3 @@ public class UserManagerDTO {
     public void setNewPassword(String newPassword) {
         this.newPassword = newPassword;
     }
-}
