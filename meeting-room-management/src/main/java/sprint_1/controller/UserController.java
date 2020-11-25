@@ -114,14 +114,15 @@ public class UserController {
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        if (bindingResult.hasErrors()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        if (userService.existsByPassword(changePasswordDTO.getOldPassword())) {
-            userService.changePassWord(id, passwordEncoder.encode(changePasswordDTO.getNewPassword()));
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        if (userService.existsByPassword(changePasswordDTO.getOldPassword())) {
+//            userService.changePassWord(id, changePasswordDTO.getNewPassword());
+//            return new ResponseEntity<>(HttpStatus.OK);
+//        }
+//        if (bindingResult.hasErrors()) {
+//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        }
+        userService.changePassWord(id, passwordEncoder.encode(changePasswordDTO.getNewPassword()));
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     //-------------------------------- Search-------------------------------
