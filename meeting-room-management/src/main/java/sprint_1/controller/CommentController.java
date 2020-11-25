@@ -132,7 +132,7 @@ public class CommentController {
     }
 
 
-    @PostMapping("/comment")
+    @PostMapping("/comment/create")
     public ResponseEntity<Void> addComment(@Validated @RequestBody CommentDTO commentDTO , BindingResult bindingResult) {
         if (bindingResult.hasErrors()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
