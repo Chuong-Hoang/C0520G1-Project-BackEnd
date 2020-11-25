@@ -25,7 +25,6 @@ public class MeetingRoomController {
     @Autowired
     private MeetingRoomService meetingRoomService;
 
-
     @GetMapping("")
     public ResponseEntity<List<MeetingRoomDto>> showAll() {
         List<MeetingRoom> list = meetingRoomService.findAll();

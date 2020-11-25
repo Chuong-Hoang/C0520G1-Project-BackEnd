@@ -5,6 +5,20 @@ import sprint_1.model.MeetingRoom;
 import sprint_1.model.TimeFrame;
 import sprint_1.model.User;
 
+/**
+ * BookedRoomDTO
+ *
+ * Version 1.0
+ *
+ * Date: 24-11-2020
+ *
+ * Copyright
+ *
+ * Modification Logs:
+ * DATE                 AUTHOR          DESCRIPTION
+ * -----------------------------------------------------------------
+ * 24-11-2020        ChuongHKV           Create Data-Transfer-Object
+ */
 public class BookedRoomDTO {
     private Long idBookedRoom;
     private String startDate;

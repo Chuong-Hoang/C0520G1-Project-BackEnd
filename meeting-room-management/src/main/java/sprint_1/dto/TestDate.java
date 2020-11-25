@@ -7,8 +7,8 @@ import java.util.Date;
 public class TestDate {
 
     public static void main(String[] args) throws Exception {
-        String dateStr1 = "2020-11-22T10:00:00.000Z";
-        String dateStr2 = "2020-11-23T09:51:58.237Z";
+        String dateStr1 = "2020-11-24T17:00:00.000Z";
+        String dateStr2 = "2020-11-24T17:00:00.000Z";
         int result = compareDates(dateStr1, dateStr2);
         if (result>0){
             System.out.println("-->date1 is later than date2");
