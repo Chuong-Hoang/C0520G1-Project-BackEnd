@@ -173,12 +173,16 @@ public class StatisticRoomController {
     @GetMapping("/allRoomName")
     public ResponseEntity<List<String>> getListRoomName() {
         List<BookedRoom> bookedRoomList = bookedRoomService.findAll();
+        Map<String, String> roomNameMaps = new TreeMap<>();
         List<String> roomNameDTOLists = new ArrayList<>();
         if (bookedRoomList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             for (BookedRoom bookedRoom : bookedRoomList) {
-                roomNameDTOLists.add(bookedRoom.getMeetingRoom().getRoomName());
+                roomNameMaps.put(bookedRoom.getMeetingRoom().getRoomName(), bookedRoom.getMeetingRoom().getRoomName());
+            }
+            for (String key : roomNameMaps.keySet()) {
+                roomNameDTOLists.add(roomNameMaps.get(key));
             }
             return new ResponseEntity<>(roomNameDTOLists, HttpStatus.OK);
         }

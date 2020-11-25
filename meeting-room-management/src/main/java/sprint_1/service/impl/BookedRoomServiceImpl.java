@@ -8,6 +8,9 @@ import sprint_1.service.BookedRoomService;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -80,10 +83,8 @@ public class BookedRoomServiceImpl implements BookedRoomService {
     public boolean validateDate(String startDate, String endDate) {
         String[] date1 = startDate.split("-");
         String[] date2 = endDate.split("-");
-        double year = Double.parseDouble(date2[0]) - Double.parseDouble(date1[0]);
-        double month = Double.parseDouble(date2[1]) - Double.parseDouble(date1[1]);
-        double day = Double.parseDouble(date2[2]) - Double.parseDouble(date1[2]);
-        return year + month + day > 0;
+        final long daysElapsed = ChronoUnit.DAYS.between(LocalDate.of(Integer.parseInt(date1[0]), Integer.parseInt(date1[1]), Integer.parseInt(date1[2])), LocalDate.of(Integer.parseInt(date2[0]), Integer.parseInt(date2[1]), Integer.parseInt(date2[2])));
+        return daysElapsed >0;
     }
 
     /**
@@ -144,10 +145,10 @@ public class BookedRoomServiceImpl implements BookedRoomService {
     public double compareEffective(String startDate, String endDate, Long startTime, Long endTime) {
         String[] date1 = startDate.split("-");
         String[] date2 = endDate.split("-");
-        double year = Double.parseDouble(date2[0]) - Double.parseDouble(date1[0]);
-        double month = Double.parseDouble(date2[1]) - Double.parseDouble(date1[1]);
-        double day = Double.parseDouble(date2[2]) - Double.parseDouble(date1[2]);
-
-        return ((((endTime - startTime) * 0.5) / ((year * 365 + month * 30 + day) * 8))) * 100;
+        long daysElapsed = ChronoUnit.DAYS.between(LocalDate.of(Integer.parseInt(date1[0]), Integer.parseInt(date1[1]), Integer.parseInt(date1[2])), LocalDate.of(Integer.parseInt(date2[0]), Integer.parseInt(date2[1]), Integer.parseInt(date2[2])));
+        if(daysElapsed == 0){
+            daysElapsed = 1;
+        }
+        return (((((endTime - startTime) * 0.5) / (daysElapsed * 8))) * 100);
     }
 }
