@@ -4,6 +4,20 @@ import sprint_1.model.User;
 
 import java.util.List;
 
+/**
+ * UserService
+ * <p>
+ * Version 1.0
+ * <p>
+ * Date: 24-11-2020
+ * <p>
+ * Copyright
+ * <p>
+ * Modification Logs:
+ * DATE                 AUTHOR          DESCRIPTION
+ * -----------------------------------------------------------------------
+ * 22-11-2020         HienTH           CRUD
+ */
 public interface UserService {
 
     List<User> findAll();

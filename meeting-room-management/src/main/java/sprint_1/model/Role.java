@@ -3,6 +3,20 @@ package sprint_1.model;
 import javax.persistence.*;
 import java.util.Collection;
 
+/**
+ * Role
+ * <p>
+ * Version 1.0
+ * <p>
+ * Date: 24-11-2020
+ * <p>
+ * Copyright
+ * <p>
+ * Modification Logs:
+ * DATE                 AUTHOR          DESCRIPTION
+ * -----------------------------------------------------------------------
+ * 22-11-2020         HienTH           CRUD
+ */
 @Entity
 public class Role {
     @Id
@@ -13,8 +27,6 @@ public class Role {
 
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
     private Collection<User> userCollection;
-
-    //Ai muốn tạo constructor có đối số thì nhớ tạo thêm constructor không đối số nhé!!!
 
     public Long getIdRole() {
         return idRole;
