@@ -1,22 +1,28 @@
 package sprint_1.dto;
 
+import org.springframework.format.annotation.NumberFormat;
+
+import javax.validation.Validator;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.util.List;
 
 public class AssetDTO {
     private Long idAsset;
-
+    @Pattern(regexp = "^[A-Z À-Ỹ][a-z à-ỹ]{1,9}(([ ][a-z à-ỹ]{0,9})?)*$")
     private String assetName;
-
+    @Min(value = 0)
     private String usingQuantity;
-
+    @Min(value = 0)
     private String fixingQuantity;
-
+    @Min(value = 1)
     private String total;
-
+    @NotBlank
     private String image;
-
+    @NotBlank
     private String description;
-
+    @Min(value = 1)
     private String price;
 
 

@@ -7,6 +7,7 @@ import java.util.Collection;
 public class RoomType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long idRoomType;
 
     private String roomTypeName;
@@ -29,7 +30,7 @@ public class RoomType {
     }
 
     public void setRoomTypeName(String roomTypeName) {
-        roomTypeName = roomTypeName;
+        this.roomTypeName = roomTypeName;
     }
 
     public Collection<MeetingRoom> getMeetingRoomCollection_1() {
@@ -40,3 +41,4 @@ public class RoomType {
         this.meetingRoomCollection_1 = meetingRoomCollection_1;
     }
 }
+

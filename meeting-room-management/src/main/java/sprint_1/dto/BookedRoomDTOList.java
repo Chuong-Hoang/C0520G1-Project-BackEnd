@@ -15,7 +15,8 @@ public class BookedRoomDTOList {
     private String content;
     private String bookedDate;
     private String bookedStatus;
-
+    private Double effective;
+    private Integer totalUse;
     private String startTime;
     private String endTime;
     private String userName;
@@ -25,13 +26,15 @@ public class BookedRoomDTOList {
     public BookedRoomDTOList() {
     }
 
-    public BookedRoomDTOList(Long idBookedRoom, String startDate, String endDate, String content, String bookedDate, String bookedStatus, String startTime, String endTime, String userName, String roomName, String roomType) {
+    public BookedRoomDTOList(Long idBookedRoom, String startDate, String endDate, String content, String bookedDate, String bookedStatus, Double effective, Integer totalUse, String startTime, String endTime, String userName, String roomName, String roomType) {
         this.idBookedRoom = idBookedRoom;
         this.startDate = startDate;
         this.endDate = endDate;
         this.content = content;
         this.bookedDate = bookedDate;
         this.bookedStatus = bookedStatus;
+        this.effective = effective;
+        this.totalUse = totalUse;
         this.startTime = startTime;
         this.endTime = endTime;
         this.userName = userName;
@@ -85,6 +88,22 @@ public class BookedRoomDTOList {
 
     public void setBookedStatus(String bookedStatus) {
         this.bookedStatus = bookedStatus;
+    }
+
+    public Double getEffective() {
+        return effective;
+    }
+
+    public void setEffective(Double effective) {
+        this.effective = effective;
+    }
+
+    public Integer getTotalUse() {
+        return totalUse;
+    }
+
+    public void setTotalUse(Integer totalUse) {
+        this.totalUse = totalUse;
     }
 
     public String getStartTime() {
