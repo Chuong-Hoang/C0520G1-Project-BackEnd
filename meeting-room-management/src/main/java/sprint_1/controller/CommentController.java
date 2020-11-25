@@ -44,9 +44,15 @@ public class CommentController {
 
     @Autowired
     ErrorTypeService errorTypeService;
+    /**
+     * get data for Job List page
+     * @param
+     * @return
+     */
 
     @GetMapping("/comment")
     public ResponseEntity<List<CommentDTO>> getListComment() {
+        //select data all CommentList
         List<CommentDTO> commentDTO = new ArrayList<>();
         List<Comment> commentList = commentService.findAll();
         if (commentList == null) {
@@ -73,9 +79,15 @@ public class CommentController {
         }
     }
 
+    /**
+     * get data for Job List page
+     * @param userNameSearch,roomNameSearch,statusSearch
+     * @return
+     */
     //admin
     @GetMapping("/comment/search")
     public ResponseEntity<List<CommentDTO>> findCommentByRoomName(@RequestParam("value1") String userNameSearch, @RequestParam("value2") String roomNameSearch, @RequestParam("value3") boolean statusSearch) {
+        //select data search Comment
         List<Comment> listAll = commentService.findAll();
         List<Comment> commentListUserName;
         if (listAll.isEmpty()) {
@@ -132,6 +144,11 @@ public class CommentController {
         }
         return new ResponseEntity<>(commentListDTO, HttpStatus.OK);
     }
+    /**
+     * get data for Job Comment
+     * @param idComment
+     * @return
+     */
 
     @GetMapping("/comment/{idComment}")
     public ResponseEntity<CommentDTO> findCommentById(@PathVariable Long idComment) {
@@ -153,6 +170,11 @@ public class CommentController {
             return new ResponseEntity<>(commentDTO, HttpStatus.OK);
         }
     }
+    /**
+     * get data for Job Handle Comment
+     * @param idComment,commentDTO
+     * @return
+     */
 
     @PutMapping("/comment/{idComment}")
     public ResponseEntity<Void> CommentHandle(@PathVariable Long idComment, @RequestBody CommentDTO commentDTO) {
@@ -166,9 +188,15 @@ public class CommentController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    /**
+     * get data for Job Details Comment
+     * @param idComment
+     * @return
+     */
+
     //user
     @PutMapping("/comment/detail/{idComment}")
-    public ResponseEntity<Void> detailCommentHandle(@PathVariable Long idComment, @RequestBody CommentDTO commentDTO) {
+    public ResponseEntity<Void> detailCommentHandle(@PathVariable Long idComment) {
         Comment comment = commentService.findById(idComment);
         if (comment == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -178,12 +206,24 @@ public class CommentController {
         return new ResponseEntity<>(HttpStatus.OK);}
     }
 
+    /**
+     * get data for Job Delete Comment
+     * @param id
+     * @return
+     */
+
     @DeleteMapping("/comment/delete/{id}")
     public ResponseEntity<Void> deleteComment(@PathVariable Long id){
         Comment comment= commentService.findById(id);
         commentService.remove(id);
         return new ResponseEntity(comment, HttpStatus.OK);
     }
+
+    /**
+     * get data for Job Create Comment
+     * @param commentDTO,bindingResult
+     * @return
+     */
 
     @PostMapping("/comment/create")
     public ResponseEntity<Void> addComment(@Validated @RequestBody CommentDTO commentDTO, BindingResult bindingResult) {
@@ -203,6 +243,13 @@ public class CommentController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
     }
+
+    /**
+     * get data for Job Notification page
+     * @param userName
+     * @return
+     */
+
     @GetMapping("/comment/notification/{userName}")
     public ResponseEntity<List<CommentDTO>> getListCommentUserName(@PathVariable String userName) {
         List<CommentDTO> commentDTO = new ArrayList<>();

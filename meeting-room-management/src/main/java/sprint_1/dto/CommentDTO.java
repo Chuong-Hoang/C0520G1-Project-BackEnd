@@ -1,5 +1,19 @@
 package sprint_1.dto;
 
+/**
+ * CommentDTO
+ * <p>
+ * Version 1.0
+ * <p>
+ * Date: 24-11-2020
+ * <p>
+ * Copyright
+ * <p>
+ * Modification Logs:
+ * DATE                 AUTHOR          DESCRIPTION
+ * -----------------------------------------------------------------------
+ * 24-11-2020         NhatL            Create
+ */
 public class CommentDTO {
     private Long idComment;
     private String senderName;
