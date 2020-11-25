@@ -21,6 +21,28 @@ public class BookedRoomDTO {
     private String meetingRoomName;
     private String roomType;
 
+    public BookedRoomDTO() {
+    }
+
+    public BookedRoomDTO(Long idBookedRoom, String startDate, String endDate, String content, String bookedDate,
+                         String bookedStatus, Long startTimeId, String startTime, Long endTimeId, String endTime,
+                         Long bookedUserId, Long meetingRoomId, String meetingRoomName, String roomType) {
+        this.idBookedRoom = idBookedRoom;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.content = content;
+        this.bookedDate = bookedDate;
+        this.bookedStatus = bookedStatus;
+        this.startTimeId = startTimeId;
+        this.startTime = startTime;
+        this.endTimeId = endTimeId;
+        this.endTime = endTime;
+        this.bookedUserId = bookedUserId;
+        this.meetingRoomId = meetingRoomId;
+        this.meetingRoomName = meetingRoomName;
+        this.roomType = roomType;
+    }
+
     public String getRoomType() {
         return roomType;
     }

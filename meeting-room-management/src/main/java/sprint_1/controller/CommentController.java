@@ -1,5 +1,4 @@
 package sprint_1.controller;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,15 +43,9 @@ public class CommentController {
 
     @Autowired
     ErrorTypeService errorTypeService;
-    /**
-     * get data for Job List page
-     * @param
-     * @return
-     */
 
     @GetMapping("/comment")
     public ResponseEntity<List<CommentDTO>> getListComment() {
-        //select data all CommentList
         List<CommentDTO> commentDTO = new ArrayList<>();
         List<Comment> commentList = commentService.findAll();
         if (commentList == null) {
