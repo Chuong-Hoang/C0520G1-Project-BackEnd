@@ -62,7 +62,6 @@ public class MeetingRoomDTO {
     public MeetingRoomDTO() {
     }
 
-
     public List<AssetDetailDTO> getAsset() {
         return asset;
     }

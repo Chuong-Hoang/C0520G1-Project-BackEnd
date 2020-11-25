@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -18,6 +19,20 @@ import sprint_1.service.UserService;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * UserController
+ * <p>
+ * Version 1.0
+ * <p>
+ * Date: 24-11-2020
+ * <p>
+ * Copyright
+ * <p>
+ * Modification Logs:
+ * DATE                 AUTHOR          DESCRIPTION
+ * -----------------------------------------------------------------------
+ * 22-11-2020         HienTH           CRUD
+ */
 @RestController
 @CrossOrigin
 @RequestMapping("/user")
@@ -29,7 +44,12 @@ public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    //--------------------------------Get All-List --------------------------------------------
+    /**
+     * get data for User list page
+     *
+     * @param
+     * @return
+     */
     @GetMapping()
     public ResponseEntity<List<UserManagerDTO>> getListUser() {
         List<User> userList = userService.findAll();
@@ -44,29 +64,43 @@ public class UserController {
         }
     }
 
-    //-----------------------------Delete-User-By-Id ----------------------------------------
+    /**
+     * delete asset by idUser
+     *
+     * @param id
+     * @return
+     */
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<User> deleteUser(@PathVariable("id") long id) {
         User user = userService.findById(id);
         if (user == null) {
-            System.out.println("Unable to delete. User with id " + id + " not found");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         userService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    //------------------------------ Get-User-By-Id---------------------------------------------
+    /**
+     * get data for User list page
+     *
+     * @param id
+     * @return
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> getUserById(@PathVariable("id") long id) {
         User user = userService.findById(id);
         if (user == null) {
-            System.out.println("Blog with id " + id + " not found");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+    /**
+     * create user
+     *
+     * @param userManagerDTO
+     * @return
+     */
     @PostMapping(value = "/create")
     public ResponseEntity<?> registerUser(@Validated({UserManagerDTO.checkCreate.class, UserManagerDTO.checkEdit.class})
                                           @RequestBody UserManagerDTO userManagerDTO, BindingResult bindingResult) {
@@ -86,7 +120,12 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    //--------------------------- Edit user--------------------------------
+    /**
+     * edit user
+     *
+     * @param userManagerDTO
+     * @return
+     */
     @PutMapping(value = "/edit/{id}")
     public ResponseEntity<?> updateUser(@Validated(UserManagerDTO.checkEdit.class) @PathVariable("id") long id,
                                         @RequestBody UserManagerDTO userManagerDTO, BindingResult bindingResult) {
@@ -98,7 +137,7 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         user.setUserName(userManagerDTO.getUserName());
-        user.setPassword(passwordEncoder.encode(userManagerDTO.getPassword()));
+        user.setPassword(passwordEncoder.encode(userManagerDTO.getNewPassword()));
         user.setFullName(userManagerDTO.getFullName());
         user.setDepartment(userManagerDTO.getDepartment());
         user.setRole(roleService.findByRoleName(userManagerDTO.getRoleName()));
@@ -106,30 +145,40 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    //----------------------------change password-------------------------------
+    /**
+     * change password user
+     *
+     * @param changePasswordDTO
+     * @return
+     */
     @PutMapping(value = "/{id}/change-password")
     public ResponseEntity<?> changePassWordUser(@Validated @RequestBody ChangePasswordDTO changePasswordDTO,
                                                 @PathVariable("id") long id, BindingResult bindingResult) {
         User user = userService.findById(id);
+        List<ChangePasswordDTO> errorsList = new ArrayList<>();
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        if (bindingResult.hasErrors()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        if (userService.existsByPassword(changePasswordDTO.getOldPassword())) {
+        if (BCrypt.checkpw(changePasswordDTO.getOldPassword(), user.getPassword())) {
             userService.changePassWord(id, passwordEncoder.encode(changePasswordDTO.getNewPassword()));
             return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            errorsList.add(new ChangePasswordDTO("Mật khẩu không chính xác"));
+            return new ResponseEntity<>(errorsList, HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    //-------------------------------- Search-------------------------------
+    /**
+     * search user by userName or by department containing
+     *
+     * @param input1,input2
+     * @return
+     */
     @GetMapping(value = "/search")
     public ResponseEntity<List<UserManagerDTO>> findUserByUserNameOrDepartment(@RequestParam("input1") String input1,
                                                                                @RequestParam("input2") String input2) {
         List<User> userAllList = userService.findAll();
-        List<User> searchUser = new ArrayList<>();
+        List<User> searchUser = null;
         if (userAllList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

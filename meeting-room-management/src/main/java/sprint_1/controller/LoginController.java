@@ -19,6 +19,17 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * JwtTokenProvider
+ *
+ * Version 1.0
+ *
+ * Date: 24/11/2020
+ *
+ * Copyright
+ *
+ * Author: Le Toan
+ */
 @CrossOrigin(origins = "*")
 @RestController
 public class LoginController {
@@ -28,6 +39,11 @@ public class LoginController {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
+    /**
+     * authenticate user
+     * @param loginRequest username and password of user
+     * @return information of user and token
+     */
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
