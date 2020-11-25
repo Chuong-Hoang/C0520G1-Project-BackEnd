@@ -1,7 +1,5 @@
 package sprint_1.dto;
 
-import sprint_1.model.ErrorType;
-
 public class CommentDTO {
     private Long idComment;
     private String senderName;
