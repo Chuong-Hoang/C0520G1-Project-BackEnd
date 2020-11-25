@@ -15,6 +15,7 @@ import java.util.List;
 import sprint_1.dto.BookedRoomDTO;
 import sprint_1.dto.BookedRoomSearchDTO;
 import sprint_1.dto.MeetingRoomSearchDTO;
+import sprint_1.dto.AssetDTO;
 import sprint_1.dto.TestDate;
 import sprint_1.model.*;
 import sprint_1.service.*;
@@ -51,6 +52,9 @@ public class BookedRoomController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AssetService assetService;
+
     // get bookedRoomDTO list from database to show on Frontend
     @GetMapping("booked-room-list/{idUser}")
     public ResponseEntity<List<BookedRoomDTO>> showAllBookedRooms(@PathVariable Long idUser) throws Exception {
@@ -61,11 +65,13 @@ public class BookedRoomController {
         String today = sdf.format(new Date());
         System.err.println("Today: " + today);
         for(BookedRoom bRom : list){
-            if((TestDate.compareDates(today, bRom.getEndDate()) > 0) && ("Đang sử dụng").equals(bRom.getBookedStatus())){
-                System.err.println("Set bookedStatus for booked-room: id=" + bRom.getIdBookedRoom());
+            if ((TestDate.compareDates(today, bRom.getEndDate()) >= 0) &&
+                    (TestDate.getDiffTime(bRom.getEndDate(), bRom.getEndTime().getIdTime()) >= 0) &&
+                    ("Đang sử dụng").equals(bRom.getBookedStatus())) {
+//                System.err.println("Set bookedStatus for booked-room: id=" + bRom.getIdBookedRoom());
                 bRom.setBookedStatus("Đã kết thúc");
-                bookedRoomService.save(bRom);
             }
+            bookedRoomService.save(bRom);
         }
 
         List<BookedRoomDTO> listDTO = new ArrayList<>();
@@ -273,15 +279,15 @@ public class BookedRoomController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    // get TimeFrame list
-    @GetMapping("time-frame")
-    public ResponseEntity<List<TimeFrame>> showAllTimeFrames() {
-        List<TimeFrame> list = timeFrameService.findAll();
-        if (list.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(list, HttpStatus.OK);
-    }
+//    // get TimeFrame list
+//    @GetMapping("time-frame")
+//    public ResponseEntity<List<TimeFrame>> showAllTimeFrames() {
+//        List<TimeFrame> list = timeFrameService.findAll();
+//        if (list.isEmpty()) {
+//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        }
+//        return new ResponseEntity<>(list, HttpStatus.OK);
+//    }
 
     // find available meeting-rooms with input fields (search meeting-rooms)
     @PostMapping("meeting-room-find") // list and search input fields combined
@@ -466,9 +472,10 @@ public class BookedRoomController {
         }
         List<MeetingRoomSearchDTO> listSearchedResult = new ArrayList<>();
         List<AssetDetail> assetList = null;
-        StringBuilder assetStringBuilder = new StringBuilder();
+        StringBuilder assetStringBuilder = null;
         MeetingRoomSearchDTO meetingRoomDTO = null;
         for (MeetingRoom room : listDateAndTimes){
+            assetStringBuilder = new StringBuilder();
             meetingRoomDTO = new MeetingRoomSearchDTO();
             meetingRoomDTO.setIdRoom(room.getIdRoom());
             meetingRoomDTO.setRoomName(room.getRoomName());
@@ -484,6 +491,56 @@ public class BookedRoomController {
             meetingRoomDTO.setRoomAsset(String.valueOf(assetStringBuilder));
             listSearchedResult.add(meetingRoomDTO);
         }
-        return new ResponseEntity<>(listSearchedResult, HttpStatus.OK);
+
+        // filter final listSearchedResult by assets browsed
+        String[] assetBrowsedList = meetingRoomSearchDTO.getRoomAsset().split("-");
+        List<MeetingRoomSearchDTO> finalList = new ArrayList<>();
+        if(assetBrowsedList.length == 0 || assetBrowsedList == null){
+            return new ResponseEntity<>(finalList, HttpStatus.OK);
+        }
+        boolean assetIncluded = true;
+        for(MeetingRoomSearchDTO roomSearchDTO : listSearchedResult){
+            assetIncluded = true;
+            for(int i = 0; i < assetBrowsedList.length; i++){
+                if(!roomSearchDTO.getRoomAsset().contains(assetBrowsedList[i])){
+                    assetIncluded = false;
+                    break;
+                }
+            }
+
+            if(assetIncluded){
+                finalList.add(roomSearchDTO);
+            }
+        }
+        if(finalList.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(finalList, HttpStatus.OK);
+    }
+
+    // find timeFrame each by Id
+    @GetMapping("time-frame/{id}")
+    public ResponseEntity<TimeFrame> findTimeFrameById(@PathVariable long id) {
+        TimeFrame timeFrame = timeFrameService.findById(id);
+        if (timeFrame == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(timeFrame, HttpStatus.OK);
+    }
+
+    @GetMapping("asset-list")
+    public ResponseEntity<List<AssetDTO>> getAllAssetList() {
+        List<Asset> assetList = assetService.findAll();
+        List<AssetDTO> assetDTOList = new ArrayList<>();
+        AssetDTO assetDTO = null;
+        if (assetList == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        for (Asset asset : assetList) {
+            assetDTO = new AssetDTO();
+            assetDTO.setAssetName(asset.getAssetName());
+            assetDTOList.add(assetDTO);
+        }
+        return new ResponseEntity<>(assetDTOList, HttpStatus.OK);
     }
 }
