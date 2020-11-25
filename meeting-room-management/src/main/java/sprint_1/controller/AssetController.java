@@ -11,6 +11,7 @@ import sprint_1.model.Asset;
 import sprint_1.model.AssetDetail;
 import sprint_1.service.AssetDetailService;
 import sprint_1.service.AssetService;
+
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,14 +94,16 @@ public class AssetController {
         Asset asset = assetService.findById(id);
         List<AssetDetail> assetDetails = (List<AssetDetail>) asset.getAssetDetailCollection();
         List<AssetDetailDTO> assetDetailsDTO = new ArrayList<>();
+        AssetDetailDTO assetDetailDTO;
+        AssetDTO assetDTO;
         if (asset != null) {
             for (AssetDetail element : assetDetails) {
-                AssetDetailDTO assetDetailDTO = new AssetDetailDTO();
+                assetDetailDTO = new AssetDetailDTO();
                 assetDetailDTO.setNameMeetingRoom(element.getMeetingRoomAsset().getRoomName());
                 assetDetailDTO.setQuantity(element.getAssetQuantity());
                 assetDetailsDTO.add(assetDetailDTO);
             }
-            AssetDTO assetDTO = new AssetDTO(asset.getIdAsset(), asset.getAssetName(),
+            assetDTO = new AssetDTO(asset.getIdAsset(), asset.getAssetName(),
                     asset.getUsingQuantity(), asset.getFixingQuantity(), asset.getTotal(),
                     asset.getImage(), asset.getDescription(), asset.getPrice(), assetDetailsDTO);
             return new ResponseEntity<>(assetDTO, HttpStatus.OK);
@@ -141,7 +144,6 @@ public class AssetController {
      */
     @PatchMapping(value = "/edit/{id}")
     public ResponseEntity<Asset> updateAsset(@Valid @RequestBody AssetDTO assetDTO, @PathVariable Long id) {
-        System.err.println("Updating " + id);
         Asset asset = assetService.findById(id);
         if (asset == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
