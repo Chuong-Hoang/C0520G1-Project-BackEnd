@@ -68,7 +68,7 @@ public class MeetingRoomController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         for (MeetingRoom el : list) {
-            listDto.add(new MeetingRoomDto(el.getIdRoom(),
+            listDto.add(new MeetingRoomDTO(el.getIdRoom(),
                     el.getRoomName(),
                     el.getFloor(),
                     el.getZone(),
