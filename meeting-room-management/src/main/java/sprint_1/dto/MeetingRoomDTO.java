@@ -7,7 +7,7 @@ public class MeetingRoomDTO {
 
     private Long idRoom;
 
-    @Pattern(regexp = "^[a-zA-Z0-9]{1,30}$",message = "Tên phòng từ 1 đến 30 ký tự")
+    @Pattern(regexp = "^[a-zA-Z0-9 ]{1,30}$",message = "Tên phòng từ 1 đến 30 ký tự")
     private String roomName;
 
     @Pattern(regexp = "^^[0-9]{0,20}$",message = "Số tầng phải là số nguyên dương")
