@@ -17,9 +17,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- */
 @RestController
 @CrossOrigin
 public class CommentController {
@@ -57,7 +54,7 @@ public class CommentController {
             return new ResponseEntity<>(commentDTO, HttpStatus.OK);
         }
     }
-//admin
+
     @GetMapping("/comment/search")
     public ResponseEntity<List<CommentDTO>> findCommentByRoomName(@RequestParam("value1") String userNameSearch, @RequestParam("value2") String roomNameSearch, @RequestParam("value3") boolean statusSearch) {
         List<Comment> listAll = commentService.findAll();
@@ -143,8 +140,6 @@ public class CommentController {
         commentService.save(comment);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-//user
     @PutMapping("/comment/detail/{idComment}")
     public ResponseEntity<Void> detailCommentHandle(@PathVariable Long idComment, @RequestBody CommentDTO commentDTO) {
         Comment comment = commentService.findById(idComment);

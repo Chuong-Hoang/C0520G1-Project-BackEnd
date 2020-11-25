@@ -336,7 +336,7 @@ public class BookedRoomController {
         return new ResponseEntity<>(listDateAndTimes, HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("delete/{id}")
     public ResponseEntity<BookedRoom> deleteBookedRoom(@PathVariable Long id) {
         BookedRoom bookedRoom = bookedRoomService.findById(id);
         if (bookedRoom == null) {
