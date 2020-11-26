@@ -108,6 +108,7 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         if (bindingResult.hasErrors()) {
+
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         User user = new User();
@@ -127,7 +128,7 @@ public class UserController {
      * @return
      */
     @PutMapping(value = "/edit/{id}")
-    public ResponseEntity<?> updateUser(@Validated(UserManagerDTO.checkEdit.class) @PathVariable("id") long id,
+    public ResponseEntity<?> updateUser(@Validated({UserManagerDTO.checkEdit.class, UserManagerDTO.checkNewPassword.class}) @PathVariable("id") long id,
                                         @RequestBody UserManagerDTO userManagerDTO, BindingResult bindingResult) {
         User user = userService.findById(id);
         if (user == null) {
