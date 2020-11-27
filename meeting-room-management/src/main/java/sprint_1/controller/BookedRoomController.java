@@ -65,10 +65,7 @@ public class BookedRoomController {
         String today = sdf.format(new Date());
         System.err.println("Today: " + today);
         for(BookedRoom bRom : list){
-            if ((TestDate.compareDates(today, bRom.getEndDate()) >= 0) &&
-                    (TestDate.getDiffTime(bRom.getEndDate(), bRom.getEndTime().getIdTime()) >= 0) &&
-                    ("Đang sử dụng").equals(bRom.getBookedStatus())) {
-//                System.err.println("Set bookedStatus for booked-room: id=" + bRom.getIdBookedRoom());
+            if (((TestDate.compareDates(today, bRom.getEndDate()) > 0) || ((TestDate.compareDates(today, bRom.getEndDate()) == 0) && (TestDate.getDiffTime(bRom.getEndDate(), bRom.getEndTime().getIdTime()) >= 0))) && ("Đang sử dụng").equals(bRom.getBookedStatus())) {
                 bRom.setBookedStatus("Đã kết thúc");
             }
             bookedRoomService.save(bRom);
@@ -488,10 +485,11 @@ public class BookedRoomController {
                 assetStringBuilder.append(assetDetail.getAssetQuantity());
                 assetStringBuilder.append("; ");
             }
-            if("".equals(String.valueOf(assetStringBuilder))){
+
+            if("".equals(String.valueOf(assetStringBuilder))) {
                 assetStringBuilder.append("[Không có thiết bị]");
             }
-            
+
             meetingRoomDTO.setRoomAsset(String.valueOf(assetStringBuilder));
             listSearchedResult.add(meetingRoomDTO);
         }
