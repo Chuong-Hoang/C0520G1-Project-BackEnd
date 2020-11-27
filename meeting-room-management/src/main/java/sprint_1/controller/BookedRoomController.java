@@ -261,7 +261,7 @@ public class BookedRoomController {
     public ResponseEntity<Void> addNewBookedRoom(@RequestBody BookedRoomDTO bookedRoomDTO) throws ParseException {
         BookedRoom bookedRoom = new BookedRoom();
         if(bookedRoomDTO != null) {
-            // SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            // SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
             bookedRoom.setMeetingRoom(meetingRoomService.findById(bookedRoomDTO.getMeetingRoomId()));
             bookedRoom.setBookedUser(userService.findById(bookedRoomDTO.getBookedUserId())); //.............
             bookedRoom.setStartDate(bookedRoomDTO.getStartDate()); //................
@@ -485,11 +485,12 @@ public class BookedRoomController {
                 assetStringBuilder.append(assetDetail.getAssetQuantity());
                 assetStringBuilder.append("; ");
             }
+
             if("".equals(String.valueOf(assetStringBuilder))) {
                 assetStringBuilder.append("[Không có thiết bị]");
             }
 
-                meetingRoomDTO.setRoomAsset(String.valueOf(assetStringBuilder));
+            meetingRoomDTO.setRoomAsset(String.valueOf(assetStringBuilder));
             listSearchedResult.add(meetingRoomDTO);
         }
 
