@@ -61,7 +61,7 @@ public class BookedRoomController {
         List<BookedRoom> list = bookedRoomService.findAll();
 
         // check bookedStatus if overdue
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         String today = sdf.format(new Date());
         System.err.println("Today: " + today);
         for(BookedRoom bRom : list){
@@ -264,7 +264,7 @@ public class BookedRoomController {
     public ResponseEntity<Void> addNewBookedRoom(@RequestBody BookedRoomDTO bookedRoomDTO) throws ParseException {
         BookedRoom bookedRoom = new BookedRoom();
         if(bookedRoomDTO != null) {
-            // SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            // SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
             bookedRoom.setMeetingRoom(meetingRoomService.findById(bookedRoomDTO.getMeetingRoomId()));
             bookedRoom.setBookedUser(userService.findById(bookedRoomDTO.getBookedUserId())); //.............
             bookedRoom.setStartDate(bookedRoomDTO.getStartDate()); //................
@@ -362,7 +362,7 @@ public class BookedRoomController {
         // (4) search by startDate && endDate && startTime && endTime <=> listCapacity not empty
         List<MeetingRoom> listDateAndTimes = new ArrayList<>();
         List<BookedRoom> bookedRoomList = null;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         String d1Input = meetingRoomSearchDTO.getStartDate();
         String d2Input = meetingRoomSearchDTO.getEndDate();
         long t1Input = Long.parseLong(meetingRoomSearchDTO.getStartTime());
@@ -486,8 +486,11 @@ public class BookedRoomController {
                 assetStringBuilder.append(assetDetail.getAsset().getAssetName());
                 assetStringBuilder.append(": ");
                 assetStringBuilder.append(assetDetail.getAssetQuantity());
-                assetStringBuilder.append(". ");
+                assetStringBuilder.append("; ");
             }
+            if("".equals(assetStringBuilder)){
+                assetStringBuilder.append("[Không có thiết bị]");
+                
             meetingRoomDTO.setRoomAsset(String.valueOf(assetStringBuilder));
             listSearchedResult.add(meetingRoomDTO);
         }
