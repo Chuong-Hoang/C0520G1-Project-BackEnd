@@ -488,7 +488,7 @@ public class BookedRoomController {
                 assetStringBuilder.append(assetDetail.getAssetQuantity());
                 assetStringBuilder.append("; ");
             }
-            if("".equals(assetStringBuilder)){
+            if("".equals(String.valueOf(assetStringBuilder))){
                 assetStringBuilder.append("[Không có thiết bị]");
             }
             
