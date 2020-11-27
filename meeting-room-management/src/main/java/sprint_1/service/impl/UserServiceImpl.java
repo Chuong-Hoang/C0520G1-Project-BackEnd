@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import sprint_1.model.User;
 import sprint_1.repository.UserRepository;
 import sprint_1.service.UserService;
-
 import java.util.List;
 
 @Service
@@ -21,6 +20,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(Long id) {
         return userRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public User findByUserName(String name) {
+        return userRepository.findByUserName(name);
     }
 
     @Override
@@ -46,8 +50,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void changePassWord(Long id, String password) {
         User user = userRepository.findById(id).orElse(null);
-        user.setPassword(password);
-        userRepository.save(user);
+        if (user != null) {
+            user.setPassword(password);
+            userRepository.save(user);
+        }
     }
 
     @Override

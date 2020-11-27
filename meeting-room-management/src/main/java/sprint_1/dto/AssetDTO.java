@@ -1,12 +1,23 @@
 package sprint_1.dto;
-
-import org.springframework.format.annotation.NumberFormat;
-
-import javax.validation.Validator;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.util.List;
+
+/**
+ * Asset
+ *
+ * Version 1.0
+ *
+ * Date: 22-11-2020
+ *
+ * Copyright
+ *
+ * Modification Logs:
+ * DATE                 AUTHOR          DESCRIPTION
+ * -----------------------------------------------------------------------
+ * 21-11-2020         TungTS            Create Class Model
+ */
 
 public class AssetDTO {
     private Long idAsset;

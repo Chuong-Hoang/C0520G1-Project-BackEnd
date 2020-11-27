@@ -1,14 +1,25 @@
 package sprint_1.dto;
 
-import sprint_1.model.ErrorType;
-
+/**
+ * CommentDTO
+ * <p>
+ * Version 1.0
+ * <p>
+ * Date: 24-11-2020
+ * <p>
+ * Copyright
+ * <p>
+ * Modification Logs:
+ * DATE                 AUTHOR          DESCRIPTION
+ * -----------------------------------------------------------------------
+ * 24-11-2020         NhatL            Create
+ */
 public class CommentDTO {
     private Long idComment;
     private String senderName;
     private String commentTime;
     private String contentReply;
     private String contentComment;
-    private Long idReplier;
     private String replierName;
     private String errorTypeName;
     private String roomName;
@@ -18,7 +29,7 @@ public class CommentDTO {
     public CommentDTO() {
     }
 
-    public CommentDTO(Long idComment, String senderName,String commentTime, String contentReply, String contentComment, String replierName, String errorTypeName, String meetingRoomName,boolean status,boolean statusView) {
+    public CommentDTO(Long idComment, String senderName, String commentTime, String contentReply, String contentComment, String replierName, String errorTypeName, String meetingRoomName, boolean status, boolean statusView) {
         this.idComment = idComment;
         this.senderName = senderName;
         this.commentTime = commentTime;
@@ -88,14 +99,6 @@ public class CommentDTO {
         this.contentComment = contentComment;
     }
 
-    public Long getIdReplier() {
-        return idReplier;
-    }
-
-    public void setIdReplier(Long idReplier) {
-        this.idReplier = idReplier;
-    }
-
     public String getReplierName() {
         return replierName;
     }
@@ -103,6 +106,7 @@ public class CommentDTO {
     public void setReplierName(String replierName) {
         this.replierName = replierName;
     }
+
     public String getRoomName() {
         return roomName;
     }

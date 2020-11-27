@@ -47,4 +47,9 @@ public class CommentServiceImpl implements CommentService {
     public List<Comment> findAllByStatus(boolean status) {
         return commentRepository.findAllByStatus(status);
     }
+
+    @Override
+    public List<Comment> findAllBySender_UserName(String name) {
+        return commentRepository.findAllBySender_UserNameOrderByCommentTimeDesc(name);
+    }
 }
