@@ -490,7 +490,8 @@ public class BookedRoomController {
             }
             if("".equals(assetStringBuilder)){
                 assetStringBuilder.append("[Không có thiết bị]");
-                
+            }
+            
             meetingRoomDTO.setRoomAsset(String.valueOf(assetStringBuilder));
             listSearchedResult.add(meetingRoomDTO);
         }
