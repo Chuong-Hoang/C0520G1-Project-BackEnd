@@ -1,7 +1,9 @@
 package sprint_1.dto;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
 /**
  * UserManagerDTO
  * <p>
@@ -25,6 +27,7 @@ public class UserManagerDTO {
 
     public interface checkNewPassword {
     }
+
     private long id;
     @NotEmpty(message = "Vui lòng nhập tên đăng nhập", groups = checkCreate.class)
     @Pattern(regexp = "^[a-z0-9]{3,30}$", message = "Tên đăng nhập không hợp lệ", groups = checkCreate.class)
@@ -44,8 +47,10 @@ public class UserManagerDTO {
     @NotEmpty(message = "Vui lòng nhập mật khẩu", groups = checkNewPassword.class)
     @Pattern(regexp = "^[a-z0-9]{6,30}$", message = "Mật khẩu không hợp lệ", groups = checkNewPassword.class)
     private String newPassword;
+
     public UserManagerDTO() {
     }
+
     public UserManagerDTO(long id, String userName, String fullName, String department, String roleName) {
         this.id = id;
         this.userName = userName;
@@ -70,45 +75,60 @@ public class UserManagerDTO {
         this.department = department;
         this.roleName = roleName;
     }
+
     public long getId() {
         return id;
     }
+
     public void setId(long id) {
         this.id = id;
     }
+
     public String getUserName() {
         return userName;
     }
+
     public void setUserName(String userName) {
         this.userName = userName;
     }
+
     public String getPassword() {
         return password;
     }
+
     public void setPassword(String password) {
         this.password = password;
     }
+
     public String getFullName() {
         return fullName;
     }
+
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }
+
     public String getDepartment() {
         return department;
     }
+
     public void setDepartment(String department) {
         this.department = department;
     }
+
     public String getRoleName() {
         return roleName;
     }
+
     public void setRoleName(String roleName) {
         this.roleName = roleName;
     }
+
     public String getNewPassword() {
         return newPassword;
     }
+
     public void setNewPassword(String newPassword) {
         this.newPassword = newPassword;
     }
+}
