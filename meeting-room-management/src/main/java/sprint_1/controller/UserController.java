@@ -154,7 +154,7 @@ public class UserController {
      */
     @PutMapping(value = "/{id}/change-password")
     public ResponseEntity<?> changePassWordUser(@Validated @RequestBody ChangePasswordDTO changePasswordDTO,
-                                                @PathVariable("id") long id, BindingResult bindingResult) {
+                                                @PathVariable("id") long id) {
         User user = userService.findById(id);
         List<ChangePasswordDTO> errorsList = new ArrayList<>();
         if (user == null) {
