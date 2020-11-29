@@ -173,6 +173,7 @@ public class MeetingRoomController {
         int capacitySearchMax1;
 
         String roomNameSearch = meetingRoomSearchDTOD.getRoomName();
+        String roomNameSearchTrim = roomNameSearch.trim();
         String floorSearch = meetingRoomSearchDTOD.getFloor();
         String zoneSearch = meetingRoomSearchDTOD.getZone();
         String roomStatusSearch = meetingRoomSearchDTOD.getRoomStatusName();
@@ -190,7 +191,7 @@ public class MeetingRoomController {
             capacitySearchMax1 = Integer.parseInt(meetingRoomSearchDTOD.getCapacityMax());
         }
 
-        List<MeetingRoom> list = meetingRoomService.searchAllFields(roomNameSearch, zoneSearch, floorSearch, roomStatusSearch, roomTypeSearch);
+        List<MeetingRoom> list = meetingRoomService.searchAllFields(roomNameSearchTrim, zoneSearch, floorSearch, roomStatusSearch, roomTypeSearch);
         if (list == null) {
             list = new ArrayList<>();
         }
@@ -199,7 +200,7 @@ public class MeetingRoomController {
         listSearch = new ArrayList<>();
 //        if(capacitySearch1 ==0)
         for (MeetingRoom el : list) {
-            if (capacitySearch1 < Integer.parseInt(el.getCapacity()) && Integer.parseInt(el.getCapacity()) < capacitySearchMax1) {
+            if (capacitySearch1 <= Integer.parseInt(el.getCapacity()) && Integer.parseInt(el.getCapacity()) <= capacitySearchMax1) {
                 listSearch.add(new MeetingRoomDTO(el.getIdRoom(),
                         el.getRoomName(),
                         el.getFloor(),
