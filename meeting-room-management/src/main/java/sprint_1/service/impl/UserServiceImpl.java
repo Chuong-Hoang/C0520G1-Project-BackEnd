@@ -5,23 +5,8 @@ import org.springframework.stereotype.Service;
 import sprint_1.model.User;
 import sprint_1.repository.UserRepository;
 import sprint_1.service.UserService;
-
 import java.util.List;
 
-/**
- * UserServiceImpl
- * <p>
- * Version 1.0
- * <p>
- * Date: 24-11-2020
- * <p>
- * Copyright
- * <p>
- * Modification Logs:
- * DATE                 AUTHOR          DESCRIPTION
- * -----------------------------------------------------------------------
- * 22-11-2020         HienTH           CRUD
- */
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
@@ -35,6 +20,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(Long id) {
         return userRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public User findByUserName(String name) {
+        return userRepository.findByUserName(name);
     }
 
     @Override

@@ -20,4 +20,6 @@ public interface CommentService {
 
     List<Comment> findAllByStatus(boolean status);
 
+    List<Comment> findAllBySender_UserName(String name);
+
 }
