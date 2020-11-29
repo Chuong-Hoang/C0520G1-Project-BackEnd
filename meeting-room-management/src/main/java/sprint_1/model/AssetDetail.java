@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Entity
 public class AssetDetail {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idAssetDetail;
 
     private String assetQuantity;
