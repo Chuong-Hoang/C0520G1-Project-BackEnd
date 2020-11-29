@@ -48,6 +48,7 @@ public class MeetingRoomController {
      * Quang
      * get all column name record from table room-type
      * get data for meeting-room page
+     *
      * @return list<String>
      * @throws
      */
@@ -91,6 +92,7 @@ public class MeetingRoomController {
      * Quang
      * get all column name record from table
      * get data for meeting-room page
+     *
      * @return list<MeetingRoomDTO>
      * @throws
      */
@@ -120,6 +122,7 @@ public class MeetingRoomController {
     /**
      * Quang
      * find meeting-room record from table
+     *
      * @param id
      * @return Object MeetingRoomDTO
      * @throws
@@ -154,37 +157,55 @@ public class MeetingRoomController {
     /**
      * Quang
      * find meeting-room record correspond with date input from table
+     *
      * @param meetingRoomSearchDTOD
      * @return List<MeetingRoomDTO>
      * @throws
      */
     @PostMapping("/search")
     public ResponseEntity<List<MeetingRoomDTO>> searchMeetingRoom(@RequestBody MeetingRoomSearchDTO meetingRoomSearchDTOD) {
+        int capacitySearch1;
+        int capacitySearchMax1;
+
         String roomNameSearch = meetingRoomSearchDTOD.getRoomName();
         String floorSearch = meetingRoomSearchDTOD.getFloor();
         String zoneSearch = meetingRoomSearchDTOD.getZone();
         String roomStatusSearch = meetingRoomSearchDTOD.getRoomStatusName();
         String roomTypeSearch = meetingRoomSearchDTOD.getRoomTypeName();
         String capacitySearch = meetingRoomSearchDTOD.getCapacity();
+        String capacitySearchMax = meetingRoomSearchDTOD.getCapacityMax();
+        if ("".equals(capacitySearch) || capacitySearch== null) {
+            capacitySearch1 = 0;
+        } else {
+            capacitySearch1 = Integer.parseInt(meetingRoomSearchDTOD.getCapacity());
+        }
+        if ("".equals(capacitySearchMax) || capacitySearchMax== null) {
+            capacitySearchMax1 = 1000;
+        } else {
+            capacitySearchMax1 = Integer.parseInt(meetingRoomSearchDTOD.getCapacityMax());
+        }
 
-        List<MeetingRoom> list = meetingRoomService.searchAllFields(roomNameSearch, capacitySearch, zoneSearch, floorSearch, roomStatusSearch, roomTypeSearch);
+        List<MeetingRoom> list = meetingRoomService.searchAllFields(roomNameSearch, zoneSearch, floorSearch, roomStatusSearch, roomTypeSearch);
         if (list == null) {
             list = new ArrayList<>();
         }
 
         List<MeetingRoomDTO> listSearch;
         listSearch = new ArrayList<>();
+//        if(capacitySearch1 ==0)
         for (MeetingRoom el : list) {
-            listSearch.add(new MeetingRoomDTO(el.getIdRoom(),
-                    el.getRoomName(),
-                    el.getFloor(),
-                    el.getZone(),
-                    el.getCapacity(),
-                    el.getImage(),
-                    el.getStartDate(),
-                    el.getEndDate(),
-                    el.getRoomType().getRoomTypeName(),
-                    el.getRoomStatus().getRoomStatusName()));
+            if (capacitySearch1 < Integer.parseInt(el.getCapacity()) && Integer.parseInt(el.getCapacity()) < capacitySearchMax1) {
+                listSearch.add(new MeetingRoomDTO(el.getIdRoom(),
+                        el.getRoomName(),
+                        el.getFloor(),
+                        el.getZone(),
+                        el.getCapacity(),
+                        el.getImage(),
+                        el.getStartDate(),
+                        el.getEndDate(),
+                        el.getRoomType().getRoomTypeName(),
+                        el.getRoomStatus().getRoomStatusName()));
+            }
         }
         if (list.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -195,6 +216,7 @@ public class MeetingRoomController {
     /**
      * Quang
      * find meeting-room record correspond with date input from table
+     *
      * @param id
      * @return List<MeetingRoomDTO>
      * @throws
@@ -229,7 +251,7 @@ public class MeetingRoomController {
     }
 
     @PostMapping("/createMeetingRoom")
-    public ResponseEntity<Void> add(@Valid @RequestBody MeetingRoomDTO meetingRoomDTO){
+    public ResponseEntity<Void> add(@Valid @RequestBody MeetingRoomDTO meetingRoomDTO) {
         MeetingRoom meetingRoom = new MeetingRoom();
         meetingRoom.setRoomName(meetingRoomDTO.getRoomName());
         meetingRoom.setFloor(meetingRoomDTO.getFloor());
@@ -267,9 +289,9 @@ public class MeetingRoomController {
     }
 
     @PutMapping("/edit/{id}")
-    public ResponseEntity<Void> editMeetingRoom(@Valid @RequestBody MeetingRoomDTO meetingRoomDTO, @PathVariable Long id){
+    public ResponseEntity<Void> editMeetingRoom(@Valid @RequestBody MeetingRoomDTO meetingRoomDTO, @PathVariable Long id) {
         MeetingRoom meetingRoom = meetingRoomService.findById(id);
-        if(meetingRoom == null){
+        if (meetingRoom == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         meetingRoom.setRoomName(meetingRoomDTO.getRoomName());

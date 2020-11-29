@@ -20,6 +20,7 @@ public class MeetingRoomSearchDTO {
     private String floor;
     private String zone;
     private String capacity;
+    private String capacityMax;
     private String roomTypeName;
     private String roomStatusName;
     private String roomAsset;
@@ -27,6 +28,14 @@ public class MeetingRoomSearchDTO {
     private String endDate;
     private String startTime;
     private String endTime;
+
+    public String getCapacityMax() {
+        return capacityMax;
+    }
+
+    public void setCapacityMax(String capacityMax) {
+        this.capacityMax = capacityMax;
+    }
 
     public MeetingRoomSearchDTO() {
     }

@@ -39,15 +39,15 @@ public class MeetingRoomServiceImpl implements MeetingRoomService {
     }
 
     @Override
-    public List<MeetingRoom> searchAllFields(String nameRoom, String capacity, String floor, String zone, String status, String type) {
+    public List<MeetingRoom> searchAllFields(String nameRoom, String zone, String floor, String status, String type) {
         if (status.equals("") && !type.isEmpty()) {
-            return meetingRoomRepository.findAllByDeleteStatusTrueAndRoomNameContainingAndCapacityContainingAndZoneContainingAndFloorContainingAndRoomStatus_RoomStatusName(nameRoom, capacity, floor, zone, status);
+            return meetingRoomRepository.findAllByDeleteStatusTrueAndRoomNameContainingAndZoneContainingAndFloorContainingAndRoomType_RoomTypeName(nameRoom, zone, floor, type);
         } else if (type.equals("") && !status.isEmpty()) {
-            return meetingRoomRepository.findAllByDeleteStatusTrueAndRoomNameContainingAndCapacityContainingAndZoneContainingAndFloorContainingAndRoomType_RoomTypeName(nameRoom, capacity, floor, zone, type);
+            return meetingRoomRepository.findAllByDeleteStatusTrueAndRoomNameContainingAndZoneContainingAndFloorContainingAndRoomStatus_RoomStatusName(nameRoom,  zone, floor, status);
         } else if (type.equals("") && status.equals("")) {
-            return meetingRoomRepository.findAllByDeleteStatusTrueAndRoomNameContainingAndCapacityContainingAndZoneContainingAndFloorContaining(nameRoom, capacity, floor, zone);
+            return meetingRoomRepository.findAllByDeleteStatusTrueAndRoomNameContainingAndZoneContainingAndFloorContaining(nameRoom, zone, floor);
         } else {
-            return meetingRoomRepository.findAllByDeleteStatusTrueAndRoomNameContainingAndCapacityContainingAndZoneContainingAndFloorContainingAndRoomStatus_RoomStatusNameAndRoomType_RoomTypeName(nameRoom, capacity, floor, zone, status, type);
+            return meetingRoomRepository.findAllByDeleteStatusTrueAndRoomNameContainingAndZoneContainingAndFloorContainingAndRoomStatus_RoomStatusNameAndRoomType_RoomTypeName(nameRoom, zone, floor, status, type);
         }
     }
 }

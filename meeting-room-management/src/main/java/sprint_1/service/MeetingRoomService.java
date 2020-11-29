@@ -16,7 +16,8 @@ public interface MeetingRoomService {
 
     void delete(Long id);
 
-    List<MeetingRoom> searchAllFields(String nameRoom, String capacity, String floor,String zone, String status,
+    List<MeetingRoom> searchAllFields(String nameRoom, String floor,String zone, String status,
             String type);
-
+//    List<MeetingRoom> searchAllFields(String nameRoom, String capacity, String floor,String zone, String status,
+//                                      String type);
 }
