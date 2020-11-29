@@ -7,16 +7,16 @@ public class MeetingRoomDTO {
 
     private Long idRoom;
 
-    @Pattern(regexp = "^[a-zA-Z0-9 ]{1,30}$",message = "Tên phòng từ 1 đến 30 ký tự")
+    @Pattern(regexp = "^[a-zA-Zà-ỹÀ-Ỹ_0-9\\s]{1,30}$",message = "Tên phòng từ 1 đến 30 ký tự")
     private String roomName;
 
-    @Pattern(regexp = "^^[0-9]{0,20}$",message = "Số tầng phải là số nguyên dương")
+    @Pattern(regexp = "^([1-9]|[1-5]\\d|60)$",message = "Số tầng phải là số nguyên dương")
     private String floor;
 
     @NotBlank
     private String zone;
 
-    @Pattern(regexp = "^^[0-9]{0,20}$",message = "Sức chứa phải là số nguyên dương")
+    @Pattern(regexp = "^([5-9]|[1-9]\\d|100)$",message = "Sức chứa phải là số nguyên dương")
     private String capacity;
 
     private String image;

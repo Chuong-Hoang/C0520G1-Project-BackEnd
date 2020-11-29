@@ -546,13 +546,14 @@ public class BookedRoomController {
         return new ResponseEntity<>(assetDTOList, HttpStatus.OK);
     }
 
-    @DeleteMapping("delete/{id}")
+    @PutMapping("edit-booked-room/{id}")
     public ResponseEntity<BookedRoom> deleteBookedRoom(@PathVariable Long id) {
         BookedRoom bookedRoom = bookedRoomService.findById(id);
         if (bookedRoom == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        bookedRoomService.deleteById(id);
+        bookedRoom.setBookedStatus("Vô hiệu hóa");
+        bookedRoomService.save(bookedRoom);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
