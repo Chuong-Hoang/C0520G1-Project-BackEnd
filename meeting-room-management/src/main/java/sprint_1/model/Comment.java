@@ -12,11 +12,9 @@ public class Comment {
     private Long idComment;
 
     private String commentTime;
-
-    @Length(min = 1,message = "Vui lòng không để trống trường này!")
+    @Length(min = 1,max = 255,message = "vui lòng nhập trường này!!")
     private String contentReply;
-
-    @Length(min = 1,message = "Vui lòng không để trống trường này!")
+    @Length(min = 1,max = 255,message = "vui lòng nhập trường này!!")
     private String contentComment;
 
     private boolean status;
