@@ -1,20 +1,5 @@
 package sprint_1.dto;
 
-/**
- * class BookedChartDTO ( statistic chart by year)
- * <p>
- * Version 1.0
- * <p>
- * Date: 24/11/2020
- * <p>
- * Copyright
- * <p>
- * Modification Logs:
- * DATE                 AUTHOR          DESCRIPTION
- * -----------------------------------------------------------------------
- * 24/11/2020        Nguyễn Tiến Hải            class
- */
-
 public class BookedChartDTO {
     private String year;
     private double effectiveMonth1;

@@ -26,9 +26,9 @@ import java.util.List;
  * Copyright
  * <p>
  * Modification Logs:
- * DATE                 AUTHOR          DESCRIPTION
- * -----------------------------------------------------------------------
- * 22-11-2020         TungTS            CRUD
+ * DATE                 AUTHOR
+ * ----------------------------
+ * 22-11-2020         TungTS
  */
 
 @RestController
@@ -94,14 +94,16 @@ public class AssetController {
         Asset asset = assetService.findById(id);
         List<AssetDetail> assetDetails = (List<AssetDetail>) asset.getAssetDetailCollection();
         List<AssetDetailDTO> assetDetailsDTO = new ArrayList<>();
+        AssetDetailDTO assetDetailDTO;
+        AssetDTO assetDTO;
         if (asset != null) {
             for (AssetDetail element : assetDetails) {
-                AssetDetailDTO assetDetailDTO = new AssetDetailDTO();
+                assetDetailDTO = new AssetDetailDTO();
                 assetDetailDTO.setNameMeetingRoom(element.getMeetingRoomAsset().getRoomName());
                 assetDetailDTO.setQuantity(element.getAssetQuantity());
                 assetDetailsDTO.add(assetDetailDTO);
             }
-            AssetDTO assetDTO = new AssetDTO(asset.getIdAsset(), asset.getAssetName(),
+            assetDTO = new AssetDTO(asset.getIdAsset(), asset.getAssetName(),
                     asset.getUsingQuantity(), asset.getFixingQuantity(), asset.getTotal(),
                     asset.getImage(), asset.getDescription(), asset.getPrice(), assetDetailsDTO);
             return new ResponseEntity<>(assetDTO, HttpStatus.OK);
@@ -142,10 +144,8 @@ public class AssetController {
      */
     @PatchMapping(value = "/edit/{id}")
     public ResponseEntity<Asset> updateAsset(@Valid @RequestBody AssetDTO assetDTO, @PathVariable Long id) {
-        System.err.println("Updating " + id);
         Asset asset = assetService.findById(id);
         if (asset == null) {
-            System.out.println("id " + id + " not found");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         asset.setAssetName(assetDTO.getAssetName());

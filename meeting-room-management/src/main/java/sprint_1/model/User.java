@@ -5,20 +5,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import javax.persistence.*;
 import java.util.Collection;
 
-/**
- * User
- * <p>
- * Version 1.0
- * <p>
- * Date: 24-11-2020
- * <p>
- * Copyright
- * <p>
- * Modification Logs:
- * DATE                 AUTHOR          DESCRIPTION
- * -----------------------------------------------------------------------
- * 22-11-2020         HienTH           CRUD
- */
 @Entity
 public class User {
     @Id
