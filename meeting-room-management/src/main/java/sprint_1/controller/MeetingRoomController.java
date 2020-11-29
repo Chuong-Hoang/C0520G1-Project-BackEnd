@@ -8,13 +8,8 @@ import sprint_1.dto.AssetDetailDTO;
 import sprint_1.dto.MeetingRoomDTO;
 
 import sprint_1.dto.MeetingRoomSearchDTO;
-import sprint_1.model.AssetDetail;
-import sprint_1.model.MeetingRoom;
-import sprint_1.model.RoomStatus;
-import sprint_1.model.RoomType;
-import sprint_1.service.MeetingRoomService;
-import sprint_1.service.RoomStatusService;
-import sprint_1.service.RoomTypeService;
+import sprint_1.model.*;
+import sprint_1.service.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;

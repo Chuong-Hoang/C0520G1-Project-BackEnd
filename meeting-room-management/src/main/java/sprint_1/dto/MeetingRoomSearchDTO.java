@@ -1,8 +1,22 @@
 package sprint_1.dto;
 
+/**
+ * MeetingRoomSearchDTO
+ *
+ * Version 1.0
+ *
+ * Date: 24-11-2020
+ *
+ * Copyright
+ *
+ * Modification Logs:
+ * DATE                 AUTHOR          DESCRIPTION
+ * ---------------------------------------------------------------------------------
+ * 24-11-2020        ChuongHKV           Create Data-Transfer-Object
+ */
 public class MeetingRoomSearchDTO {
+    private Long idRoom;
     private String roomName;
-
     private String floor;
     private String zone;
     private String capacity;
@@ -25,7 +39,15 @@ public class MeetingRoomSearchDTO {
 
     public MeetingRoomSearchDTO() {
     }
-  
+
+    public Long getIdRoom() {
+        return idRoom;
+    }
+
+    public void setIdRoom(Long idRoom) {
+        this.idRoom = idRoom;
+    }
+
     public String getStartDate() {
         return startDate;
     }

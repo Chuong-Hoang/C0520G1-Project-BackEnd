@@ -27,4 +27,6 @@ public interface AssetRepository extends JpaRepository<Asset, Long> {
 
     // Check for duplicate asset names
     Boolean existsByAssetName(String assetName);
+
+    Asset findByAssetName(String assetName);
 }

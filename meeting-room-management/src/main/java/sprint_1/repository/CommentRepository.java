@@ -9,4 +9,5 @@ public interface CommentRepository extends JpaRepository<Comment,Long> {
     List<Comment> findAllByMeetingRoom_RoomNameContains(String name);
     List<Comment> findAllBySender_FullNameContains(String name);
     List<Comment> findAllByStatus(boolean status);
+    List<Comment> findAllBySender_UserNameOrderByCommentTimeDesc(String name);
 }
