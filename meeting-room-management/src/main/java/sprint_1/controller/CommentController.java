@@ -93,7 +93,7 @@ public class CommentController {
             comment.setStatus(false);
             comment.setSender(userService.findByUserName((commentDTO.getSenderName())));
             comment.setMeetingRoom(meetingRoomService.findByRoomName(commentDTO.getRoomName()));
-            comment.setErrorType(errorTypeService.findById((long) 5));
+            comment.setErrorType(errorTypeService.findById((long) 6));
             comment.setReplier(userService.findByUserName(commentDTO.getReplierName()));
             comment.setContentReply(commentDTO.getContentReply());
             comment.setStatusView(false);

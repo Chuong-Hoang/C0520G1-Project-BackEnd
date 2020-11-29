@@ -30,4 +30,6 @@ public interface AssetService {
     List<Asset> findAllByAssetNameContaining(String name);
 
     boolean existsByAssetName(String assetName);
+
+    Asset findByAssetName(String assetName);
 }
