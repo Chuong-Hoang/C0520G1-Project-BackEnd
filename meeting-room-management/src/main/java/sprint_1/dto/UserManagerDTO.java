@@ -19,11 +19,11 @@ import javax.validation.constraints.Size;
  * 22-11-2020         HienTH           CRUD
  */
 public class UserManagerDTO {
-    public interface checkCreate {
-    }
+        public interface checkCreate {
+        }
 
-    public interface checkEdit {
-    }
+        public interface checkEdit {
+        }
 
     public interface checkNewPassword {
     }
